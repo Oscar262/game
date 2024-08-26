@@ -1,6 +1,7 @@
 package org.game.admin.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.game.base.model.MainBase;
 import org.game.utils.EncryptionUtils;
 
@@ -19,6 +20,7 @@ public class User {
 
     private String name;
 
+    @JsonProperty("last_name")
     private String lastname;
 
     @Column(unique = true)
