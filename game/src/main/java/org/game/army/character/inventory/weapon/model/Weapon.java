@@ -1,4 +1,4 @@
-package org.game.army.weapon.model;
+package org.game.army.character.inventory.weapon.model;
 
 import org.game.admin.model.User;
 import org.game.utils.StringListConverter;
@@ -17,6 +17,8 @@ public class Weapon {
     private User user;
 
     private String name;
+
+    private byte[] image;
 
     @Column(columnDefinition = "jsonb")
     @Convert(converter = StringListConverter.class)

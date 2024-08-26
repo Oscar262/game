@@ -1,6 +1,8 @@
 package org.game.admin.service;
 
 import org.game.admin.input.UserInput;
+import org.game.admin.input.UserPagination;
+import org.game.admin.input.UserSearch;
 import org.game.admin.model.User;
 import org.game.admin.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,11 @@ public class UserService {
     private PasswordEncoder encoder;
 
     public Optional<User> findByUsernameOrEmail(String query) {
-        return userRepository.findByUsernameOrEmail(query);
+        UserPagination userPagination = new UserPagination();
+        userPagination.setQ(query);
+        userPagination.setLimit(1);
+        UserSearch userSearch = new UserSearch();
+        return userRepository.findByQuery(userPagination, userSearch).stream().findFirst();
     }
 
     public User registerNewUser(UserInput userInput) throws Exception {

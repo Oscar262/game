@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name = "\"user\"")
 public class User {
 
 
@@ -41,6 +42,9 @@ public class User {
 
     @Column(columnDefinition = "boolean default true")
     private boolean enabled;
+
+    @Column(columnDefinition = "boolean default true")
+    private boolean news;
 
     @JsonIgnore
     private LocalDateTime lastAccessAt;
@@ -150,6 +154,14 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public boolean isNews() {
+        return news;
+    }
+
+    public void setNews(boolean news) {
+        this.news = news;
     }
 
     public LocalDateTime getLastAccessAt() {
