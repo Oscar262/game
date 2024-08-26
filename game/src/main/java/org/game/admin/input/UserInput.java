@@ -8,6 +8,10 @@ public class UserInput {
 
     private String password;
 
+    private String name;
+
+    private String lastname;
+
     public UserInput() {
     }
 
@@ -34,5 +38,21 @@ public class UserInput {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 }

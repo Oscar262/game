@@ -1,6 +1,6 @@
 package org.game.army.weapon.model;
 
-import org.game.admin.model.Account;
+import org.game.admin.model.User;
 import org.game.utils.StringListConverter;
 
 import javax.persistence.*;
@@ -13,8 +13,8 @@ public class Weapon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Account.class)
-    private Account account;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = User.class)
+    private User user;
 
     private String name;
 
