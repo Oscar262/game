@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.game.admin.model.User;
 import org.game.army.character.inventory.costume.model.*;
 import org.game.army.character.inventory.weapon.model.Weapon;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -34,7 +35,12 @@ public class Character {
 
     private BasicType type;
 
-   //private Map<String, Long> skills;
+    @Type(type = "json")
+    @Column(
+            name = "skills",
+            columnDefinition = "jsonb"
+    )
+   private Map<String, Long> skills;
 
    //private Map<Capabilities, Long> capabilities;
 
