@@ -42,10 +42,20 @@ public class Character {
     )
    private Map<String, Long> skills;
 
-   //private Map<Capabilities, Long> capabilities;
+    @Type(type = "json")
+    @Column(
+            name = "attribute",
+            columnDefinition = "jsonb"
+    )
+   private Map<Attribute, Long> attribute;
 
-   //@JsonProperty("max_capabilities")
-   //private Map<Capabilities, Long> maxCapabilities;
+   @JsonProperty("max_attribute")
+   @Type(type = "json")
+   @Column(
+           name = "max_attribute",
+           columnDefinition = "jsonb"
+   )
+   private Map<Attribute, Long> maxAttribute;
 
     private SubType subType;
 
@@ -58,7 +68,7 @@ public class Character {
     private boolean dead;
 
 
-    public enum Capabilities{
+    public enum Attribute{
         HEALTH_POINTS,
         MANA,
         AGILITY,

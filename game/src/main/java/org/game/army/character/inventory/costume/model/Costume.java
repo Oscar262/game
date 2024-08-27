@@ -1,18 +1,14 @@
-package org.game.army.character.inventory.weapon.model;
+package org.game.army.character.inventory.costume.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.game.admin.model.User;
 import org.game.army.character.model.Character;
-import org.hibernate.annotations.Type;
 import org.springframework.data.util.Pair;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Entity
-public class Weapon {
+public class Costume {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,18 +28,12 @@ public class Weapon {
     )
     private Map<Character.Attribute, Pair<String, Long>> attribute;
 
-    @JsonProperty("secondary_enabled")
-    @Column(name = "secondary_enabled", columnDefinition = "boolean default true")
-    private boolean secondaryEnabled;
-
     private Type type;
 
     public enum Type{
-        SWORD,
-        BOW,
-        SPEAR,
-        GUN,
-        SHIELD,
-        MAGIC
+        BOOTS,
+        GLOVES,
+        HELMET,
+        PANTS
     }
 }

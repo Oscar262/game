@@ -1,6 +1,9 @@
 package org.game.base.model;
 
-import org.game.utils.StringListConverter;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.game.army.character.model.Character;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,9 +21,13 @@ public class MainBaseType {
     @OneToMany(mappedBy = "mainBaseType")
     private Set<MainBase> mainBaseList;
 
-    @Column(columnDefinition = "jsonb")
-    @Convert(converter = StringListConverter.class)
-    private List<String> forbiddenCharacters;
+    @JsonProperty("forbidden_characters")
+    @org.hibernate.annotations.Type(type = "json")
+    @Column(
+            name = "forbidden_characters",
+            columnDefinition = "jsonb"
+    )
+    private List<Character.BasicType> forbiddenCharacters;
 
     private int level;
 
