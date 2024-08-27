@@ -26,7 +26,7 @@ public class Costume {
             name = "skills",
             columnDefinition = "jsonb"
     )
-    private Map<Character.Attribute, Pair<String, Long>> attribute;
+    private Map<Character.Attribute, Long> attribute;
 
     private Type type;
 
@@ -34,6 +34,8 @@ public class Costume {
         BOOTS,
         GLOVES,
         HELMET,
-        PANTS
+        PANTS,
+        RING,
+        NECKLACE
     }
 }

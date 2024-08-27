@@ -30,13 +30,10 @@ public class Weapon {
             name = "skills",
             columnDefinition = "jsonb"
     )
-    private Map<Character.Attribute, Pair<String, Long>> attribute;
-
-    @JsonProperty("secondary_enabled")
-    @Column(name = "secondary_enabled", columnDefinition = "boolean default true")
-    private boolean secondaryEnabled;
+    private Map<Character.Attribute, Long> attribute;
 
     private Type type;
+
 
     public enum Type{
         SWORD,
@@ -44,6 +41,7 @@ public class Weapon {
         SPEAR,
         GUN,
         SHIELD,
-        MAGIC
+        MAGIC,
+        DAGGER
     }
 }
