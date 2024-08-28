@@ -1,5 +1,7 @@
 package org.game.admin.input;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UserInput {
 
     private String username;
@@ -9,8 +11,8 @@ public class UserInput {
     private String password;
 
     private String name;
-
-    private String lastname;
+    @JsonProperty("last_name")
+    private String lastName;
 
     public UserInput() {
     }
@@ -48,11 +50,11 @@ public class UserInput {
         this.name = name;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

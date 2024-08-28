@@ -35,12 +35,12 @@ public class UserService {
 
     public User registerNewUser(UserInput userInput) throws Exception {
         if (userRepository.findByUsername(userInput.getUsername()).isPresent()) {
-            throw new Exception("Username already exist");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exist");
         }
         if (userRepository.findByEmail(userInput.getEmail()).isPresent()) {
-            throw new Exception("Email already registered");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered");
         }
-            User user = new User(userInput.getName(), userInput.getLastname(), userInput.getUsername(), userInput.getEmail(),
+            User user = new User(userInput.getName(), userInput.getLastName(), userInput.getUsername(), userInput.getEmail(),
                     encoder.encode(userInput.getPassword()), UUID.randomUUID(), 0L, true, java.time.LocalDateTime.now());
 
         return userRepository.save(user);

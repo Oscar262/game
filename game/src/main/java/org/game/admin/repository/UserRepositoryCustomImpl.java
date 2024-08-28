@@ -68,6 +68,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
     }
 
     private Predicate addPredicates(Root<User> userData, CriteriaQuery<User> cqData, CriteriaBuilder cb, UserSearch userSearch) {
+        //TODO: revisar toPredicate
         return userSearch.build().toPredicate(userData, cqData, cb);
     }
 

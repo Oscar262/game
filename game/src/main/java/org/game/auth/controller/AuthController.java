@@ -12,15 +12,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
-@Controller
+@RestController
 public class AuthController {
 
     @Autowired
@@ -34,15 +31,13 @@ public class AuthController {
 
 
     @GetMapping("/login")
-    public JwtOutput login(@RequestParam("query") String query, String password) {
-        //TODO: falta por hacer un filtro para todos los endpoints y comprobar si el token todavia es valido, y si no lo es,
-        // entonces forbidden, mirar chatgpt, tambien falta añadir filters
-        Optional<User> optionalUser = userService.findByUsernameOrEmail(query);
-        if (optionalUser.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not exist");
-        else {
+    public JwtOutput login(@RequestParam("query") String query, @RequestParam String password) {
+       Optional<User> optionalUser = userService.findByUsernameOrEmail(query);
+       if (optionalUser.isEmpty())
+           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not exist");
+       else {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(optionalUser.get().getEmail(), password)
+                    new UsernamePasswordAuthenticationToken(optionalUser.get().getUsername(), password)
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -56,7 +51,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public User register(UserInput userInput) {
+    public User register(@RequestBody UserInput userInput) {
         try {
             return userService.registerNewUser(userInput);
         } catch (Exception e) {

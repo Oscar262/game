@@ -22,6 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
+        //TODO: falla revisar
         Optional<org.game.admin.model.User> optionalUser = userService.findByUsername(username);
         if (optionalUser.isEmpty())
             throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Username %s not found", username));
