@@ -30,14 +30,14 @@ public class AuthController {
     private JwtTokenUtil jwtTokenUtil;
 
 
-    @GetMapping("/login")
-    public JwtOutput login(@RequestParam("query") String query, @RequestParam String password) {
-       Optional<User> optionalUser = userService.findByUsernameOrEmail(query);
+    @PostMapping("/login")
+    public JwtOutput login(@RequestBody UserInput userInput) {
+       Optional<User> optionalUser = userService.findByUsernameOrEmail(userInput.getQ());
        if (optionalUser.isEmpty())
            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not exist");
        else {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(optionalUser.get().getUsername(), password)
+                    new UsernamePasswordAuthenticationToken(optionalUser.get().getUsername(), userInput.getPassword())
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);

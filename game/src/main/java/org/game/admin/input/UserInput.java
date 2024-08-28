@@ -11,8 +11,11 @@ public class UserInput {
     private String password;
 
     private String name;
+
     @JsonProperty("last_name")
     private String lastName;
+
+    private String q;
 
     public UserInput() {
     }
@@ -56,5 +59,13 @@ public class UserInput {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getQ() {
+        return q;
+    }
+
+    public void setQ(String q) {
+        this.q = q;
     }
 }
