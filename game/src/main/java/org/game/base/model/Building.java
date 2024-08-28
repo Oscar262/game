@@ -24,6 +24,6 @@ public class Building {
         SMITHY,
         LABORATORY,
         TRAINING_CENTER,
-
+        MISSION_CENTER
     }
 }

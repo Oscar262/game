@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.game.admin.model.User;
 import org.game.army.character.inventory.costume.model.*;
 import org.game.army.character.inventory.weapon.model.Weapon;
+import org.game.base.model.MainBaseType;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -44,18 +45,18 @@ public class Character {
 
     @Type(type = "json")
     @Column(
-            name = "attribute",
+            name = "attributes",
             columnDefinition = "jsonb"
     )
-   private Map<Attribute, Long> attribute;
+   private Map<Attribute, Long> attributes;
 
-   @JsonProperty("max_attribute")
+   @JsonProperty("max_attributes")
    @Type(type = "json")
    @Column(
-           name = "max_attribute",
+           name = "max_attributes",
            columnDefinition = "jsonb"
    )
-   private Map<Attribute, Long> maxAttribute;
+   private Map<Attribute, Long> maxAttributes;
 
     private SubType subType;
 
@@ -63,6 +64,9 @@ public class Character {
 
     @OneToOne(targetEntity = InventoryCharacter.class)
     private InventoryCharacter inventoryCharacter;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Card.class)
+    private Card card;
 
     @Column(columnDefinition = "boolean default false")
     private boolean dead;

@@ -1,6 +1,7 @@
 package org.game.base.model;
 
 import javax.persistence.*;
+import java.util.Map;
 
 @Entity
 public class MainBase {
