@@ -73,4 +73,8 @@ public class UserService  implements UserDetailsService {
     public Page<User> getAll(Pageable userPagination, UserSearch userSearch) {
         return userRepository.findAll(userSearch.build(), userPagination);
     }
+
+    public User getUser() {
+        return null;
+    }
 }

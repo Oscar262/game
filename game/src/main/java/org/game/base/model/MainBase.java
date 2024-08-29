@@ -25,6 +25,8 @@ public class MainBase {
 
     private byte[] image;
 
+    private byte[] blazon;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = MainBaseType.class)
     @JoinColumn(name = "main_base_type")
     private MainBaseType mainBaseType;

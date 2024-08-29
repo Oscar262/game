@@ -45,29 +45,24 @@ public class Card {
 
 
     public enum Type{
-        BRONZE(0),
-        SILVER(1),
-        GOLD(2),
-        PLATINUM(3),
-        AMETHYST(4),
-        EMERALD(5),
-        SAPPHIRE(6),
-        RUBY(7),
-        DIAMOND(8),
-        DARK(9);
+        BRONZE(5),
+        SILVER(20),
+        GOLD(50),
+        DIAMOND(75),
+        DARK(100);
 
-        private Integer stars;
+        private Integer maxLevel;
 
-        Type(Integer stars) {
-            this.stars = stars;
+        Type(Integer maxLevel) {
+            this.maxLevel = maxLevel;
         }
 
-        public Integer getStars() {
-            return stars;
+        public Integer getMaxLevel() {
+            return maxLevel;
         }
 
-        public void setStars(Integer stars) {
-            this.stars = stars;
+        public void setMaxLevel(Integer maxLevel) {
+            this.maxLevel = maxLevel;
         }
     }
 
