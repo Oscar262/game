@@ -2,10 +2,7 @@ package org.game.army.character.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.game.admin.model.User;
-import org.game.army.character.inventory.costume.model.*;
-import org.game.army.character.inventory.weapon.model.Weapon;
-import org.game.base.model.MainBaseType;
+import org.game.auth.model.User;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -70,6 +67,9 @@ public class Character {
 
     @Column(columnDefinition = "boolean default false")
     private boolean dead;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean favorite;
 
 
     public enum Attribute{

@@ -1,6 +1,6 @@
-package org.game.admin.repository;
+package org.game.auth.repository;
 
-import org.game.admin.model.User;
+import org.game.auth.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

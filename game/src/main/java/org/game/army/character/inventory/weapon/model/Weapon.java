@@ -1,14 +1,9 @@
 package org.game.army.character.inventory.weapon.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.game.admin.model.User;
+import org.game.auth.model.User;
 import org.game.army.character.model.Character;
-import org.hibernate.annotations.Type;
-import org.springframework.data.util.Pair;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Entity

@@ -1,8 +1,8 @@
-package org.game.admin.repository;
+package org.game.auth.repository;
 
-import org.game.admin.input.UserPagination;
-import org.game.admin.input.UserSearch;
-import org.game.admin.model.User;
+import org.game.auth.input.UserPagination;
+import org.game.auth.input.UserSearch;
+import org.game.auth.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,7 +13,6 @@ import javax.persistence.Query;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 

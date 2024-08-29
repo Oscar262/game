@@ -1,15 +1,13 @@
 package org.game.utils;
 
-import org.game.admin.model.User;
-import org.game.admin.service.UserService;
-import org.game.auth.jwt.JwtTokenUtil;
-import org.game.auth.jwt.UserDetailsImpl;
+import org.game.auth.model.User;
+import org.game.auth.service.UserService;
+import org.game.auth.model.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;

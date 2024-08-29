@@ -1,6 +1,6 @@
 package org.game;
 
-import org.game.admin.service.UserService;
+import org.game.auth.service.UserService;
 import org.game.utils.AccessDeniedHandler;
 import org.game.utils.AuthEntryPointJwt;
 import org.game.utils.AuthTokenFilter;
@@ -17,8 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.servlet.Filter;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)

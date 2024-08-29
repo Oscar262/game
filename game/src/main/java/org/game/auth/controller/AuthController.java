@@ -1,13 +1,12 @@
 package org.game.auth.controller;
 
-import com.sun.xml.bind.v2.runtime.output.Encoded;
-import org.game.admin.input.UserInput;
-import org.game.admin.input.UserPagination;
-import org.game.admin.input.UserSearch;
-import org.game.admin.model.User;
-import org.game.admin.service.UserService;
-import org.game.auth.jwt.JwtTokenUtil;
-import org.game.auth.jwt.UserDetailsImpl;
+import org.game.auth.input.UserInput;
+import org.game.auth.input.UserPagination;
+import org.game.auth.input.UserSearch;
+import org.game.auth.model.User;
+import org.game.auth.service.UserService;
+import org.game.utils.JwtTokenUtil;
+import org.game.auth.model.UserDetailsImpl;
 import org.game.auth.output.JwtOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,8 +1,8 @@
-package org.game.auth.jwt;
+package org.game.utils;
 
 import io.jsonwebtoken.*;
+import org.game.auth.model.UserDetailsImpl;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;

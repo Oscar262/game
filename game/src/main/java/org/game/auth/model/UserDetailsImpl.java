@@ -1,7 +1,6 @@
-package org.game.auth.jwt;
+package org.game.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.game.admin.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;

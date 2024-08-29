@@ -1,10 +1,10 @@
-package org.game.admin.service;
+package org.game.auth.service;
 
-import org.game.admin.input.UserPagination;
-import org.game.admin.input.UserSearch;
-import org.game.admin.model.User;
-import org.game.admin.repository.UserRepository;
-import org.game.auth.jwt.UserDetailsImpl;
+import org.game.auth.input.UserPagination;
+import org.game.auth.input.UserSearch;
+import org.game.auth.model.User;
+import org.game.auth.repository.UserRepository;
+import org.game.auth.model.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +27,7 @@ public class UserService  implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        Optional<org.game.admin.model.User> optionalUser = findByUsername(username);
+        Optional<org.game.auth.model.User> optionalUser = findByUsername(username);
         if (optionalUser.isEmpty())
             throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Username %s not found", username));
         else {

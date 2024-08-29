@@ -1,8 +1,8 @@
-package org.game.admin.input;
+package org.game.auth.input;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.game.admin.model.User;
+import org.game.auth.model.User;
 import org.game.utils.Filter;
 import org.game.utils.SpecificationFilters;
 

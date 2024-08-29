@@ -1,9 +1,8 @@
-package org.game.admin.model;
+package org.game.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.game.base.model.MainBase;
-import org.game.utils.EncryptionUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

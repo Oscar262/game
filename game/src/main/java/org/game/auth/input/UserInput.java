@@ -1,4 +1,4 @@
-package org.game.admin.input;
+package org.game.auth.input;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
