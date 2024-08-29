@@ -2,12 +2,15 @@ package org.game.auth.controller;
 
 import com.sun.xml.bind.v2.runtime.output.Encoded;
 import org.game.admin.input.UserInput;
+import org.game.admin.input.UserPagination;
+import org.game.admin.input.UserSearch;
 import org.game.admin.model.User;
 import org.game.admin.service.UserService;
 import org.game.auth.jwt.JwtTokenUtil;
 import org.game.auth.jwt.UserDetailsImpl;
 import org.game.auth.output.JwtOutput;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,12 +19,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Validated
+@EnableWebMvc
 @RestController
 public class AuthController {
 
@@ -37,6 +44,11 @@ public class AuthController {
     @Autowired
     private PasswordEncoder encoder;
 
+
+    @GetMapping("/user")
+    public Page<User> users(UserPagination userPagination, UserSearch userSearch){
+        return userService.getAll(userPagination, userSearch);
+    }
 
     @PostMapping("/signin")
     public JwtOutput login(@RequestBody UserInput userInput) {

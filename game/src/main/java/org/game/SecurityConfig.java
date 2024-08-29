@@ -3,6 +3,7 @@ package org.game;
 import org.game.admin.service.UserService;
 import org.game.utils.AccessDeniedHandler;
 import org.game.utils.AuthEntryPointJwt;
+import org.game.utils.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.Filter;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -38,16 +42,22 @@ public class SecurityConfig {
         return authenticationProvider;
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).accessDeniedHandler(accessDeniedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/login", "/register").permitAll();
+                .authorizeRequests().antMatchers("/signin", "/register").permitAll()
+                .antMatchers("/**").hasAuthority("USER")
+                .anyRequest().authenticated();
         http.authenticationProvider(authenticationProvider());
-
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    @Bean
+    public AuthTokenFilter jwtAuthenticationFilter() {
+        return new AuthTokenFilter();
     }
 
     @Bean

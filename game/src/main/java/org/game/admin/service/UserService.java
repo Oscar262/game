@@ -7,6 +7,8 @@ import org.game.admin.model.User;
 import org.game.admin.repository.UserRepository;
 import org.game.auth.jwt.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -64,8 +66,12 @@ public class UserService  implements UserDetailsService {
         else throw new UsernameNotFoundException(String.format("User with email %s not fount", email));
     }
 
-    private User updateLastAccessTime(User user) {
+    public User updateLastAccessTime(User user) {
         user.setLastAccessAt(LocalDateTime.now());
         return userRepository.save(user);
+    }
+
+    public Page<User> getAll(Pageable userPagination, UserSearch userSearch) {
+        return userRepository.findAll(userSearch.build(), userPagination);
     }
 }
