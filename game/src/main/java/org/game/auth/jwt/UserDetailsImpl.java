@@ -1,6 +1,7 @@
 package org.game.auth.jwt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.game.admin.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +35,16 @@ public class UserDetailsImpl implements UserDetails {
         this.name = name;
         this.lastname = lastname;
         this.enabled = enabled;
+        this.authorities = AuthorityUtils.createAuthorityList("USER");
+    }
+
+    public UserDetailsImpl(User user) {
+        this.userId = user.getId();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.name = user.getName();
+        this.lastname = user.getLastname();
+        this.enabled = user.isEnabled();
         this.authorities = AuthorityUtils.createAuthorityList("USER");
     }
 

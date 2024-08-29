@@ -21,7 +21,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public Page<User> findByQuery(UserPagination pageable, UserSearch userSearch) {
+    public Page<User> findForLogin(UserPagination pageable, UserSearch userSearch) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> cqData = cb.createQuery(User.class);
         Root<User> userData = cqData.from(User.class);
@@ -33,13 +33,13 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
         cqData.where(predicates.toArray(new Predicate[0]));
         cqCount.where(predicates.toArray(new Predicate[0]));
         Sort sort = pageable.getSort();
-        if (sort != null) {
-            List<Order> orderList = new ArrayList<>();
-            Order nullLast = cb.asc(cb.selectCase().when(userData.get(sort.stream().findFirst().get().getProperty()).isNull(), 1).otherwise(0));
-            orderList.add(nullLast);
-            orderList.addAll(sort.stream().map(order -> mapSortOrderToCriteriaOrder(cb, userData, order)).collect(Collectors.toList()));
-            cqData.orderBy(orderList);
-        }
+       //if (sort != null) {
+       //    List<Order> orderList = new ArrayList<>();
+       //    Order nullLast = cb.asc(cb.selectCase().when(userData.get(sort.stream().findFirst().get().getProperty()).isNull(), 1).otherwise(0));
+       //    orderList.add(nullLast);
+       //    orderList.addAll(sort.stream().map(order -> mapSortOrderToCriteriaOrder(cb, userData, order)).collect(Collectors.toList()));
+       //    cqData.orderBy(orderList);
+       //}
 
         Query query = entityManager.createQuery(cqData);
         query.setFirstResult((int) pageable.getOffset());
@@ -58,12 +58,11 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
         List<Predicate> predicates = new ArrayList<>();
 
         if (pageable.getQ() != null) {
-            Predicate usernameLike = cb.like(cb.upper(userData.get("username")), "%" + pageable.getQ() + "%");
-            Predicate emailLike = cb.like(cb.upper(userData.get("email")), "%" + pageable.getQ() + "%");
+            Predicate usernameLike = cb.like((userData.get("username")), "%" + pageable.getQ() + "%");
+            Predicate emailLike = cb.like((userData.get("email")), "%" + pageable.getQ() + "%");
             Predicate like = cb.or(usernameLike, emailLike);
             predicates.add(like);
         }
-        predicates.add(addPredicates(userData, cqData, cb, userSearch));
         return predicates;
     }
 

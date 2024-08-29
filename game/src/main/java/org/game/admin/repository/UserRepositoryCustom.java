@@ -11,5 +11,5 @@ import java.util.List;
 public interface UserRepositoryCustom {
 
     @Transactional
-    Page<User> findByQuery(UserPagination userPagination, UserSearch userSearch);
+    Page<User> findForLogin(UserPagination userPagination, UserSearch userSearch);
 }

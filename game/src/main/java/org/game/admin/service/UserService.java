@@ -5,8 +5,11 @@ import org.game.admin.input.UserPagination;
 import org.game.admin.input.UserSearch;
 import org.game.admin.model.User;
 import org.game.admin.repository.UserRepository;
+import org.game.auth.jwt.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,32 +20,32 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UserService {
+public class UserService  implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder encoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        //TODO: falla revisar
+        Optional<org.game.admin.model.User> optionalUser = findByUsername(username);
+        if (optionalUser.isEmpty())
+            throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Username %s not found", username));
+        else {
+            return new UserDetailsImpl(optionalUser.get());
+        }
+    }
 
     public Optional<User> findByUsernameOrEmail(String query) {
         UserPagination userPagination = new UserPagination();
         userPagination.setQ(query);
         userPagination.setLimit(1);
         UserSearch userSearch = new UserSearch();
-        return userRepository.findByQuery(userPagination, userSearch).stream().findFirst();
+        return userRepository.findForLogin(userPagination, userSearch).stream().findFirst();
     }
 
-    public User registerNewUser(UserInput userInput) throws Exception {
-        if (userRepository.findByUsername(userInput.getUsername()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exist");
-        }
-        if (userRepository.findByEmail(userInput.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered");
-        }
-            User user = new User(userInput.getName(), userInput.getLastName(), userInput.getUsername(), userInput.getEmail(),
-                    encoder.encode(userInput.getPassword()), UUID.randomUUID(), 0L, true, java.time.LocalDateTime.now());
-
+    public User registerNewUser(User user) throws Exception {
         return userRepository.save(user);
     }
 
