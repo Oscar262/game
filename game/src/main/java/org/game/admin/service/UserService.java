@@ -1,6 +1,5 @@
 package org.game.admin.service;
 
-import org.game.admin.input.UserInput;
 import org.game.admin.input.UserPagination;
 import org.game.admin.input.UserSearch;
 import org.game.admin.model.User;
@@ -13,13 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService  implements UserDetailsService {
@@ -30,7 +27,6 @@ public class UserService  implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        //TODO: falla revisar
         Optional<org.game.admin.model.User> optionalUser = findByUsername(username);
         if (optionalUser.isEmpty())
             throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Username %s not found", username));
@@ -59,10 +55,13 @@ public class UserService  implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    public User updateLastAccessTime(String email) {
-        Optional<User> user = findByEmail(email);
-        if (user.isPresent())
-            return updateLastAccessTime(user.get());
+    public User updateLastAccessTime(String email, String accessToke) {
+        Optional<User> optionalUser = findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setToken(accessToke);
+            return updateLastAccessTime(user);
+        }
         else throw new UsernameNotFoundException(String.format("User with email %s not fount", email));
     }
 

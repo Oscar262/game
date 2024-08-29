@@ -65,7 +65,7 @@ public class AuthController {
                 UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
                 String jwt = jwtTokenUtil.generateToken(authentication);
                 JwtOutput jwtOutput = new JwtOutput(jwt, userDetails.getEmail(), userDetails.getName(), userDetails.getLastname());
-                userService.updateLastAccessTime(userDetails.getEmail());
+                userService.updateLastAccessTime(userDetails.getEmail(), jwtOutput.getAccessToke());
 
                 return jwtOutput;
             } catch (BadCredentialsException e) {
