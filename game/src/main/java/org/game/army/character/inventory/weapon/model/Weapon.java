@@ -1,5 +1,9 @@
 package org.game.army.character.inventory.weapon.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.game.auth.model.User;
 import org.game.army.character.model.Character;
 
@@ -7,6 +11,10 @@ import javax.persistence.*;
 import java.util.Map;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Weapon {
 
     @Id

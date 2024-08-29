@@ -1,12 +1,20 @@
 package org.game.army.character.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Map;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Card {
 
     @Id
@@ -17,7 +25,7 @@ public class Card {
 
     private Type type;
 
-    private Integer starts;
+    private Integer stars;
 
     @Transient
     @JsonProperty("character_name")

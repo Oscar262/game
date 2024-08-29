@@ -2,6 +2,10 @@ package org.game.army.character.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.game.auth.model.User;
 import org.hibernate.annotations.Type;
 
@@ -10,6 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Character {
 
 
