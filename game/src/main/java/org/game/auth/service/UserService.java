@@ -5,6 +5,7 @@ import org.game.auth.input.UserSearch;
 import org.game.auth.model.User;
 import org.game.auth.repository.UserRepository;
 import org.game.auth.model.UserDetailsImpl;
+import org.game.utils.AuthenticationFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,9 @@ public class UserService  implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AuthenticationFacadeImpl authenticationFacade;
 
 
     @Override
@@ -75,6 +79,23 @@ public class UserService  implements UserDetailsService {
     }
 
     public User getUser() {
+        Object authObject = authenticationFacade.getAuthentication();
+        if (authObject != null){{
+            Object userObject = authenticationFacade.getAuthentication().getPrincipal();
+            if (userObject != null && userObject instanceof UserDetails){
+                UserDetails userDetails = (UserDetails) userObject;
+                if (userDetails.getUsername() != "anonymous"){
+                    UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userObject;
+                    Optional<User> optionalUser = finById(userDetailsImpl.getUserId());
+                    if (optionalUser.isPresent())
+                        return optionalUser.get();
+                }
+            }
+        }}
         return null;
+    }
+
+    private Optional<User> finById(Long userId) {
+        return userRepository.findById(userId);
     }
 }
