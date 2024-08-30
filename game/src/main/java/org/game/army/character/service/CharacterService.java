@@ -1,6 +1,7 @@
 package org.game.army.character.service;
 
 import org.game.army.character.model.Card;
+import org.game.army.character.model.Skill;
 import org.game.army.character.repository.CharacterRepository;
 import org.game.army.character.model.Character;
 import org.game.army.character.utils.CharactersVariables;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -29,54 +31,41 @@ public class CharacterService {
     @Autowired
     private CardService cardService;
 
+    @Autowired
+    private SkillService skillService;
 
 
     public Character newCharacter() {
         //TODO: falta get user
         User user = userService.getUser();
-        if (user == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect user");
+        if (user == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect user");
 
         Character character = new Character();
         character.setUser(user);
 
-        Map<Character.Skill, Long> skills = new HashMap<>();
-        Map<Character.Attribute, Long> attributes = new HashMap<>();
-        Map<Character.Attribute, Long> maxAttributes = new HashMap<>();
+
+        //TODO: hacer con llamadas a ia
+        character.setImage(null);
 
         //TODO: hacer con llamadas a ia
         character.setGender(charactersVariables.getGender());
-        if (character.getGender() == Character.Gender.MALE)
-            character.setName(charactersVariables.getMaleName());
-        else
-            character.setName(charactersVariables.getFemaleName());
+        if (character.getGender() == Character.Gender.MALE) character.setName(charactersVariables.getMaleName());
+        else character.setName(charactersVariables.getFemaleName());
+        character.setLastName(charactersVariables.getLastName());
 
         character.setExperience(0L);
-        character.setToNextLevel(charactersVariables.totalXPNextLevel(character.getLevel()));
         Card card = cardService.findByType(charactersVariables.getCharacterCard(user.getLevel()));
         character.setCard(card);
         character.setLevel(card.getType().getMinLevel());
-        //TODO: hacer con llamadas a ia
-        character.setImage(null);
-        //          image
-        //TODO: dependiendo del tipo de base se deben asignar porcentages diferentes para la seleccion
-        character.setType(null);
-        //          type
-        //TODO: dependiendo del nivel y del tipo
-        character.setSkills(null);
-        //  skills
-        //TODO: dependiendo del nivel y del tipo
-        character.setAttributes(null);
-        //          attributes
-        //TODO: completamente aleatorio,
-        character.setMaxAttributes(null);
-        //  maxAttributes
-        //TODO: aleatorio entre los tipos
-        character.setSubType(null);
-        //          subType
-        //TODO: completamente aleatorio
-        //  profession
 
+        character.setToNextLevel(charactersVariables.totalXPNextLevel(character.getLevel()));
+        character.setType(charactersVariables.getType());
+        List<Skill> skills = skillService.getSkillByCharacterType(character.getType());
+        character.setSubType(charactersVariables.getSubTypes(character.getCard().getType(), character.getType()));
+        character.setSkills(charactersVariables.getSkills(character.getLevel(), skills));
+        character.setAttributes(charactersVariables.getAttributes(character.getLevel()));
+        character.setMaxAttributes(charactersVariables.getMaxAttributes(character.getAttributes()));
+        character.setProfession(charactersVariables.getProfessions(character.getLevel()));
 
         return characterRepository.save(character);
     }

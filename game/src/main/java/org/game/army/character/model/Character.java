@@ -32,6 +32,9 @@ public class Character {
 
     private String name;
 
+    @JsonProperty("last_name")
+    private String lastName;
+
     private byte[] image;
 
     private Long level;
@@ -48,23 +51,24 @@ public class Character {
             name = "skills",
             columnDefinition = "jsonb"
     )
-   private Map<Skill, Qualification> skills;
+    private Map<Skill, Qualification> skills;
 
     @Type(type = "json")
     @Column(
             name = "attributes",
             columnDefinition = "jsonb"
     )
-   private Map<Attribute, Long> attributes;
+    private Map<Attribute, Long> attributes;
 
-   @JsonProperty("max_attributes")
-   @Type(type = "json")
-   @Column(
-           name = "max_attributes",
-           columnDefinition = "jsonb"
-   )
-   private Map<Attribute, Long> maxAttributes;
+    @JsonProperty("max_attributes")
+    @Type(type = "json")
+    @Column(
+            name = "max_attributes",
+            columnDefinition = "jsonb"
+    )
+    private Map<Attribute, Long> maxAttributes;
 
+    @JsonProperty("sub_type")
     private SubType subType;
 
     @JsonProperty("profession")
@@ -76,6 +80,7 @@ public class Character {
     private Map<Profession, Qualification> profession;
 
     @OneToOne(targetEntity = InventoryCharacter.class)
+    @JsonProperty("inventory_character")
     private InventoryCharacter inventoryCharacter;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Card.class)
@@ -86,7 +91,6 @@ public class Character {
 
     @Column(columnDefinition = "boolean default false")
     private boolean favorite;
-
 
 
     public enum Qualification {
@@ -100,7 +104,7 @@ public class Character {
         X
     }
 
-    public enum Attribute{
+    public enum Attribute {
         HEALTH_POINTS,
         MANA,
         AGILITY,
@@ -170,12 +174,8 @@ public class Character {
         TURNED,
         ALIVE_SUMMONED;
     }
-    //TODO: probably class
-    public enum Skill{
 
-    }
-
-    public enum Gender{
+    public enum Gender {
         MALE,
         FEMALE
     }

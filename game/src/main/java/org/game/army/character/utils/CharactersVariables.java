@@ -2,9 +2,11 @@ package org.game.army.character.utils;
 
 import org.game.army.character.model.Card;
 import org.game.army.character.model.Character;
+import org.game.army.character.model.Skill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.image.ImageProducer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +86,89 @@ public class CharactersVariables {
         }
     }
 
-    private List<String> maleNames = List.of(
+
+    public Character.BasicType getType() {
+        return Character.BasicType.values()[random.nextInt(getRandomNum(Character.BasicType.values().length))];
+    }
+
+    public Map<Skill, Character.Qualification> getSkills(Long level, List<Skill> skills) {
+        int skillsNum = 0;
+        if (level <= 5)
+            skillsNum = 1;
+        else if (level <= 20)
+            skillsNum = 2;
+        else
+            skillsNum = 5;
+        Map<Skill, Character.Qualification> map = new HashMap<>();
+        for (int i = 0; i < skillsNum; i++) {
+            Skill skill = skills.get(getRandomNum(skills.size()));
+            Character.Qualification qualification = Character.Qualification.values()[getRandomNum(skills.size())];
+            map.put(skill, qualification);
+        }
+        return map;
+    }
+
+    public Map<Character.Attribute, Long> getAttributes(Long level) {
+        Map<Character.Attribute, Long> map = new HashMap<>();
+        for (int i = 0; i < Character.Attribute.values().length; i++) {
+            Character.Attribute attribute = Character.Attribute.values()[i];
+            Long value = null;
+
+            if (level < 5)
+                value = (long) getRandomNum(20);
+            else if (level < 20)
+                value = (long) (10 + getRandomNum(20));
+            else if (level < 50)
+                value = (long) (30 + getRandomNum(20));
+
+            map.put(attribute, value);
+        }
+        return map;
+    }
+
+    public Map<Character.Attribute, Long> getMaxAttributes(Map<Character.Attribute, Long> attributes) {
+        Map<Character.Attribute, Long> map = new HashMap<>();
+        for (int i = 0; i < Character.Attribute.values().length; i++) {
+            Character.Attribute attribute = Character.Attribute.values()[i];
+            Long value = (long) 100 - getRandomNum(30);
+            Long minAttribute = attributes.get(attribute);
+
+            if (minAttribute > value)
+                value = minAttribute;
+
+            map.put(attribute, value);
+        }
+        return map;
+    }
+
+    public Character.SubType getSubTypes(Card.Type card, Character.BasicType type) {
+        if (card != Card.Type.NONE && card != Card.Type.BRONZE & card != Card.Type.SILVER){
+            return type.getSubTypes().get(getRandomNum(type.getSubTypes().size()));
+        }
+        else
+            return null;
+    }
+
+    public Map<Character.Profession, Character.Qualification> getProfessions(Long level){
+        Map<Character.Profession, Character.Qualification> map = new HashMap<>();
+        for (int i = 0; i < Character.Profession.values().length; i++) {
+            Character.Profession profession = Character.Profession.values()[i];
+            Character.Qualification qualification = null;
+
+            if (level < 5)
+                qualification = Character.Qualification.values()[getRandomNum(1)];
+            else if (level < 20)
+                qualification = Character.Qualification.values()[getRandomNum(3)];
+            else if (level < 50)
+                qualification = Character.Qualification.values()[getRandomNum(Character.Qualification.values().length)];
+
+            map.put(profession, qualification);
+        }
+        return map;
+    }
+
+
+    private final List<String> maleNames = List.of(
             "Alejandro",
             "Liam",
             "Matteo",
@@ -137,7 +221,7 @@ public class CharactersVariables {
             "Emilio"
     );
 
-    private List<String> femaleNames = List.of(
+    private final List<String> femaleNames = List.of(
             "Isabella",
             "Sofía",
             "Emma",
@@ -190,7 +274,7 @@ public class CharactersVariables {
             "Alicia"
     );
 
-    private List<String> lastNames = List.of(
+    private final List<String> lastNames = List.of(
             "García",
             "Smith",
             "Fernández",
