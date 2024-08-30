@@ -48,7 +48,7 @@ public class Character {
             name = "skills",
             columnDefinition = "jsonb"
     )
-   private Map<String, Long> skills;
+   private Map<Skill, Qualification> skills;
 
     @Type(type = "json")
     @Column(
@@ -67,7 +67,13 @@ public class Character {
 
     private SubType subType;
 
-    private Profession profession;
+    @JsonProperty("profession")
+    @Type(type = "json")
+    @Column(
+            name = "profession",
+            columnDefinition = "jsonb"
+    )
+    private Map<Profession, Qualification> profession;
 
     @OneToOne(targetEntity = InventoryCharacter.class)
     private InventoryCharacter inventoryCharacter;
@@ -81,6 +87,18 @@ public class Character {
     @Column(columnDefinition = "boolean default false")
     private boolean favorite;
 
+
+
+    public enum Qualification {
+        F,
+        E,
+        D,
+        C,
+        B,
+        A,
+        S,
+        X
+    }
 
     public enum Attribute{
         HEALTH_POINTS,
@@ -98,14 +116,14 @@ public class Character {
 
 
     public enum BasicType {
-        PIRATE(List.of(Character.SubType.GUNNER, Character.SubType.PIRATE_KNIGHT)),
-        SOLDIER(List.of(Character.SubType.KNIGHT, Character.SubType.HEAVY_KNIGHT)),
-        RANGE(List.of(Character.SubType.SHOOTER, Character.SubType.ARCHER)),
-        MAGICIAN(List.of(Character.SubType.ELEMENTAL_MAGE, Character.SubType.HEALER, Character.SubType.SUMMONER)),
-        DRUID(List.of(Character.SubType.DARK_DRUID, Character.SubType.LIGHT_DRUID)),
-        STEALER(List.of(Character.SubType.KILLER)),
-        HALF_BEAST(List.of(Character.SubType.BEAST_TAMER)),
-        SUMMONED(List.of(Character.SubType.ALIVE_SUMMONED));
+        PIRATE(List.of(SubType.GUNNER, SubType.PIRATE_KNIGHT)),
+        SOLDIER(List.of(SubType.KNIGHT, SubType.HEAVY_KNIGHT)),
+        RANGE(List.of(SubType.SHOOTER, SubType.ARCHER)),
+        MAGICIAN(List.of(SubType.ELEMENTAL_MAGE, Character.SubType.HEALER, SubType.SUMMONER)),
+        DRUID(List.of(SubType.DARK_DRUID, SubType.LIGHT_DRUID)),
+        STEALER(List.of(SubType.KILLER)),
+        HALF_BEAST(List.of(SubType.BEAST_TAMER, SubType.TURNED)),
+        SUMMONED(List.of(SubType.ALIVE_SUMMONED));
 
 
         private List<Character.SubType> subTypes;
@@ -149,7 +167,12 @@ public class Character {
         KNIGHT,
         HEAVY_KNIGHT,
         BEAST_TAMER,
+        TURNED,
         ALIVE_SUMMONED;
+    }
+    //TODO: probably class
+    public enum Skill{
+
     }
 
     public enum Gender{

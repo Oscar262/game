@@ -40,10 +40,11 @@ public class CharacterService {
         Character character = new Character();
         character.setUser(user);
 
-        Map<String, Long> skills = new HashMap<>();
+        Map<Character.Skill, Long> skills = new HashMap<>();
         Map<Character.Attribute, Long> attributes = new HashMap<>();
         Map<Character.Attribute, Long> maxAttributes = new HashMap<>();
 
+        //TODO: hacer con llamadas a ia
         character.setGender(charactersVariables.getGender());
         if (character.getGender() == Character.Gender.MALE)
             character.setName(charactersVariables.getMaleName());
@@ -55,13 +56,25 @@ public class CharacterService {
         Card card = cardService.findByType(charactersVariables.getCharacterCard(user.getLevel()));
         character.setCard(card);
         character.setLevel(card.getType().getMinLevel());
-
+        //TODO: hacer con llamadas a ia
+        character.setImage(null);
         //          image
+        //TODO: dependiendo del tipo de base se deben asignar porcentages diferentes para la seleccion
+        character.setType(null);
         //          type
+        //TODO: dependiendo del nivel y del tipo
+        character.setSkills(null);
         //  skills
+        //TODO: dependiendo del nivel y del tipo
+        character.setAttributes(null);
         //          attributes
+        //TODO: completamente aleatorio,
+        character.setMaxAttributes(null);
         //  maxAttributes
+        //TODO: aleatorio entre los tipos
+        character.setSubType(null);
         //          subType
+        //TODO: completamente aleatorio
         //  profession
 
 
