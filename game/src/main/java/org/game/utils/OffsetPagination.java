@@ -1,5 +1,7 @@
 package org.game.utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -13,12 +15,17 @@ public class OffsetPagination implements Pageable {
     private final static int LIMIT = 50;
     private final static int OFFSET = 0;
 
+    @Setter
+    @Getter
     private int limit;
+    @Setter
     private int offset;
 
     private LinkedHashSet<@Pattern(regexp = "^[a-zA-Z_0-9.,]+(_asc|_desc)$", message = "invalid 'sort' format (field_asc or field_desc)") String> sort;
+
     private Sort pageableSort;
 
+    @Getter
     private Map<String, String> fieldsMap;
 
     public OffsetPagination() {
@@ -39,35 +46,15 @@ public class OffsetPagination implements Pageable {
             offset = OFFSET;
         if (limit < 1)
             limit = LIMIT;
-        this.limit = LIMIT;
-        this.offset = OFFSET;
+        this.limit = limit;
+        this.offset = offset;
         this.fieldsMap = fieldsMap;
         this.pageableSort = sort;
-    }
-
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
     }
 
     public void setSort(LinkedHashSet<String> sort) {
         this.sort = sort;
         this.pageableSort = initPageableSort();
-    }
-
-    public Sort getPageableSort() {
-        return pageableSort;
-    }
-
-    public Map<String, String> getFieldsMap() {
-        return fieldsMap;
     }
 
     @Override
