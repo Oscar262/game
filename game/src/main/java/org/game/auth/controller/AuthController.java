@@ -1,5 +1,7 @@
 package org.game.auth.controller;
 
+import org.game.army.character.model.Card;
+import org.game.army.character.utils.CharactersVariables;
 import org.game.auth.input.UserInput;
 import org.game.auth.input.UserPagination;
 import org.game.auth.input.UserSearch;

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Map;
@@ -45,24 +44,26 @@ public class Card {
 
 
     public enum Type{
-        BRONZE(5),
-        SILVER(20),
-        GOLD(50),
-        DIAMOND(75),
-        DARK(100);
+        NONE(0L),
+        BRONZE(5L),
+        SILVER(20L),
+        GOLD(50L),
+        DIAMOND(75L),
+        EPIC(100L),
+        DARK(100L);
 
-        private Integer maxLevel;
+        private Long minLevel;
 
-        Type(Integer maxLevel) {
-            this.maxLevel = maxLevel;
+        Type(Long minLevel) {
+            this.minLevel = minLevel;
         }
 
-        public Integer getMaxLevel() {
-            return maxLevel;
+        public Long getMinLevel() {
+            return minLevel;
         }
 
-        public void setMaxLevel(Integer maxLevel) {
-            this.maxLevel = maxLevel;
+        public void setMinLevel(Long minLevel) {
+            this.minLevel = minLevel;
         }
     }
 

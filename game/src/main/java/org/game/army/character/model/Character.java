@@ -28,6 +28,8 @@ public class Character {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = User.class)
     private User user;
 
+    private Gender gender;
+
     private String name;
 
     private byte[] image;
@@ -148,5 +150,10 @@ public class Character {
         HEAVY_KNIGHT,
         BEAST_TAMER,
         ALIVE_SUMMONED;
+    }
+
+    public enum Gender{
+        MALE,
+        FEMALE
     }
 }

@@ -1,4 +1,4 @@
-package org.game.army.character;
+package org.game.army.character.repository;
 
 import org.game.army.character.model.Character;
 import org.springframework.data.jpa.repository.JpaRepository;
