@@ -1,13 +1,17 @@
 package org.game.army.character.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.game.auth.model.User;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,6 +22,9 @@ import java.util.Map;
 @AllArgsConstructor
 @Getter
 @Setter
+@TypeDefs({
+        @TypeDef(name = "json", typeClass = JsonType.class)
+})
 public class Character {
 
 
@@ -51,7 +58,7 @@ public class Character {
             name = "skills",
             columnDefinition = "jsonb"
     )
-    private Map<Skill, Qualification> skills;
+    private Map<Long, Qualification> skills;
 
     @Type(type = "json")
     @Column(
@@ -81,6 +88,7 @@ public class Character {
 
     @OneToOne(targetEntity = InventoryCharacter.class)
     @JsonProperty("inventory_character")
+    @JsonIgnoreProperties("character")
     private InventoryCharacter inventoryCharacter;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Card.class)

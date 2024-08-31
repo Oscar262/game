@@ -44,7 +44,7 @@ public class Card {
 
 
     public enum Type{
-        NONE(0L),
+        NONE(1L),
         BRONZE(5L),
         SILVER(20L),
         GOLD(50L),

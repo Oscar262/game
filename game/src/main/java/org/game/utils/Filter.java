@@ -16,8 +16,9 @@ public class Filter {
             this.value = null;
         } else {
             this.operator = OperatorFilter.fromKey(paramValue.substring(0, paramValue.indexOf(":")));
-            this.value = paramValue.substring(1, paramValue.indexOf(":"));
+            this.value = paramValue.substring(paramValue.indexOf(":") + 1);
         }
+        this.field = field;
     }
 
     public Filter(String field, String paramValue, FilterType type){

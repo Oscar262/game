@@ -1,5 +1,7 @@
 package org.game;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.game.auth.service.UserService;
 import org.game.utils.AccessDeniedHandler;
 import org.game.utils.AuthEntryPointJwt;
@@ -67,6 +69,13 @@ public class SecurityConfig {
 
     @Bean
     public Random random(){return new Random();}
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        return objectMapper;
+    }
 
     @Bean
     public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {

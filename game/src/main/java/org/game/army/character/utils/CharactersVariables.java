@@ -6,7 +6,6 @@ import org.game.army.character.model.Skill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.awt.image.ImageProducer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,7 @@ public class CharactersVariables {
 
 
     private int getRandomNum(int max) {
-        return random.nextInt(max) + 1;
+        return random.nextInt(max);
     }
 
     public Character.Gender getGender() {
@@ -91,7 +90,7 @@ public class CharactersVariables {
         return Character.BasicType.values()[random.nextInt(getRandomNum(Character.BasicType.values().length))];
     }
 
-    public Map<Skill, Character.Qualification> getSkills(Long level, List<Skill> skills) {
+    public Map<Long, Character.Qualification> getSkills(Long level, List<Skill> skills) {
         int skillsNum = 0;
         if (level <= 5)
             skillsNum = 1;
@@ -99,11 +98,11 @@ public class CharactersVariables {
             skillsNum = 2;
         else
             skillsNum = 5;
-        Map<Skill, Character.Qualification> map = new HashMap<>();
+        Map<Long, Character.Qualification> map = new HashMap<>();
         for (int i = 0; i < skillsNum; i++) {
             Skill skill = skills.get(getRandomNum(skills.size()));
             Character.Qualification qualification = Character.Qualification.values()[getRandomNum(skills.size())];
-            map.put(skill, qualification);
+            map.put(skill.getId(), qualification);
         }
         return map;
     }
