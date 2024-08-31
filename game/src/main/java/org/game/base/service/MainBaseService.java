@@ -3,6 +3,7 @@ package org.game.base.service;
 import org.game.auth.model.User;
 import org.game.auth.service.UserService;
 import org.game.base.model.MainBase;
+import org.game.base.model.MainBaseType;
 import org.game.base.repository.MainBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,12 @@ public class MainBaseService {
 
     @Autowired
     private MainBaseRepository mainBaseRepository;
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MainBaseTypeService mainBaseTypeService;
 
 
 
@@ -65,11 +70,13 @@ public class MainBaseService {
             }
         }
         mainBase.setBlazon(blazonBytes);
+        mainBase.setMainBaseType(mainBaseTypeService.getById(mainBase.getMainBaseType().getId()));
 
-        MainBase base = mainBaseRepository.save(mainBase);
-        user.setMainBase(base);
+
+        mainBase = mainBaseRepository.save(mainBase);
+        user.setMainBase(mainBase);
         userService.save(user);
 
-        return base;
+        return mainBase;
     }
 }

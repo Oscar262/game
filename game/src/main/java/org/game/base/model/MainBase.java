@@ -38,6 +38,7 @@ public class MainBase {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = MainBaseType.class)
     @JoinColumn(name = "main_base_type")
+    @JsonProperty("main_base_type")
     private MainBaseType mainBaseType;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = MainBaseType.class)

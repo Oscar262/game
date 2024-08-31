@@ -100,6 +100,6 @@ public class UserService  implements UserDetailsService {
     }
 
     public User save(User user) {
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 }
