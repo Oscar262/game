@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -32,7 +33,7 @@ public class MainBase {
     private MainBaseType mainBaseType;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = MainBaseType.class)
-    private Map<Building, Long> building;
+    private List<Building> building;
 
 
 }

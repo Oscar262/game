@@ -31,13 +31,13 @@ public class MainBaseType {
     @JsonIgnore
     private Set<MainBase> mainBaseList;
 
-    @JsonProperty("forbidden_characters")
+    @JsonProperty("available_characters")
     @org.hibernate.annotations.Type(type = "json")
     @Column(
-            name = "forbidden_characters",
+            name = "available_characters",
             columnDefinition = "jsonb"
     )
-    private List<Character.BasicType> forbiddenCharacters;
+    private List<Character.BasicType> availableCharacter;
 
     private int level;
 

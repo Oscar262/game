@@ -65,7 +65,7 @@ public class CharacterService {
         character.setLevel(card.getType().getMinLevel());
 
         character.setToNextLevel(charactersVariables.totalXPNextLevel(character.getLevel()));
-        character.setType(charactersVariables.getType());
+        character.setType(charactersVariables.getType(user.getMainBase().getMainBaseType()));
         List<Skill> skills = skillService.getSkillByCharacterType(character.getType());
         character.setSubType(charactersVariables.getSubTypes(character.getCard().getType(), character.getType()));
         character.setSkills(charactersVariables.getSkills(character.getLevel(), skills));

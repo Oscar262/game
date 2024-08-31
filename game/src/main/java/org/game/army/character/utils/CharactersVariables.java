@@ -3,6 +3,8 @@ package org.game.army.character.utils;
 import org.game.army.character.model.Card;
 import org.game.army.character.model.Character;
 import org.game.army.character.model.Skill;
+import org.game.base.model.MainBase;
+import org.game.base.model.MainBaseType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -86,8 +88,8 @@ public class CharactersVariables {
     }
 
 
-    public Character.BasicType getType() {
-        return Character.BasicType.values()[random.nextInt(getRandomNum(Character.BasicType.values().length))];
+    public Character.BasicType getType(MainBaseType mainBaseType) {
+        return Character.BasicType.values()[random.nextInt(getRandomNum(mainBaseType.getAvailableCharacter().size()))];
     }
 
     public Map<Long, Character.Qualification> getSkills(Long level, List<Skill> skills) {

@@ -25,6 +25,8 @@ public class Building {
 
     private Type type;
 
+    private Long level;
+
     public enum Type{
         RESIDENCE,
         INN,
