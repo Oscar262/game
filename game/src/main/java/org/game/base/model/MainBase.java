@@ -1,9 +1,11 @@
 package org.game.base.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,7 +26,13 @@ public class MainBase {
 
     private Long level;
 
-    private byte[] image;
+    @JsonProperty("image")
+    @Type(type = "json")
+    @Column(
+            name = "image",
+            columnDefinition = "jsonb"
+    )
+    private Map<Long, byte[]> image;
 
     private byte[] blazon;
 

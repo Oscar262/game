@@ -39,9 +39,6 @@ public class MainBaseType {
     )
     private List<Character.BasicType> availableCharacter;
 
-    private int level;
-
-
 
     public enum Type {
         MODERN_MILITARY,

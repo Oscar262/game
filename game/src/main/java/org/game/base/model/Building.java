@@ -1,14 +1,14 @@
 package org.game.base.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Map;
 
 @Entity
 @NoArgsConstructor
@@ -25,7 +25,17 @@ public class Building {
 
     private Type type;
 
-    private Long level;
+    @JsonProperty("image")
+    @org.hibernate.annotations.Type(type = "json")
+    @Column(
+            name = "image",
+            columnDefinition = "jsonb"
+    )
+    private Map<Long, byte[]> image;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = MainBase.class)
+    @JoinColumn(name = "main_base")
+    private MainBase mainBase;
 
     public enum Type{
         RESIDENCE,

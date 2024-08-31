@@ -98,4 +98,8 @@ public class UserService  implements UserDetailsService {
     private Optional<User> finById(Long userId) {
         return userRepository.findById(userId);
     }
+
+    public User save(User user) {
+        userRepository.save(user);
+    }
 }
