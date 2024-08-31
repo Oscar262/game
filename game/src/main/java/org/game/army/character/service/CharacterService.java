@@ -14,11 +14,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CharacterService {
@@ -41,6 +43,22 @@ public class CharacterService {
     @Autowired
     private InventoryCharacterService inventoryCharacterService;
 
+
+    public Optional<Character> getCharacter(Long characterId) {
+        User user = userService.getUser();
+        if (user == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect user");
+
+        return characterRepository.findById(characterId);
+    }
+
+
+    public Page<Character> getAll(Pageable pageable, CharacterSearch characterSearch) {
+        User user = userService.getUser();
+        if (user == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect user");
+        characterSearch.setUserId("eq:" + user.getId());
+
+        return characterRepository.findAll(characterSearch.build(), pageable);
+    }
 
     public Character newCharacter() {
         User user = userService.getUser();
@@ -78,11 +96,18 @@ public class CharacterService {
         return characterRepository.save(character);
     }
 
-    public Page<Character> getAll(Pageable pageable, CharacterSearch characterSearch){
-        User user = userService.getUser();
-        if (user == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect user");
-        characterSearch.setUserId("eq:" + user.getId());
-
-        return characterRepository.findAll(characterSearch.build(), pageable);
+    public Character saveImage(Long characterId, MultipartFile multipart) {
+        Optional<Character> optionalCharacter = getCharacter(characterId);
+        if (optionalCharacter.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Character not fount");
+        Character character = optionalCharacter.get();
+        byte[] fileBytes = null;
+        try {
+            fileBytes = multipart.getBytes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        character.setImage(fileBytes);
+        return characterRepository.save(character);
     }
 }
