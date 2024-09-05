@@ -73,12 +73,12 @@ public class SecurityConfig {
         return new Random();
     }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        return objectMapper;
-    }
+   //@Bean
+   //public ObjectMapper objectMapper() {
+   //    ObjectMapper objectMapper = new ObjectMapper();
+   //    objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+   //    return objectMapper;
+   //}
 
     @Bean
     public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {
