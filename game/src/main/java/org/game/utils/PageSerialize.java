@@ -24,6 +24,9 @@ public class PageSerialize extends StdSerializer<Page> {
         json.writeNumberField("total", value.getTotalElements());
         json.writeNumberField("offset", value.getPageable().getOffset());
         json.writeNumberField("limit", value.getPageable().getPageSize());
+        json.writeNumberField("actual_page", value.getPageable().getPageNumber());
+        json.writeBooleanField("first", value.isFirst());
+        json.writeBooleanField("last", value.isLast());
         json.writeFieldName("data");
         provider.defaultSerializeValue(value.getContent(), json);
         json.writeEndObject();
