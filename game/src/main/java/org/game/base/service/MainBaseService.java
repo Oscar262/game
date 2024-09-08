@@ -79,4 +79,41 @@ public class MainBaseService {
 
         return mainBase;
     }
+
+    public MainBase mainBaseImage(MultipartFile level1, MultipartFile level2, MultipartFile level3){
+        User user = userService.getUser();
+        MainBase mainBase = user.getMainBase();
+        Map<Long, byte[]> map = new HashMap<>();
+
+        byte[] level1Bytes = null;
+        if (level1 != null){
+            try {
+                level1Bytes = level1.getBytes();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        map.put(2L, level1Bytes);
+        byte[] level2Bytes = null;
+        if (level1 != null){
+            try {
+                level2Bytes = level2.getBytes();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        map.put(1L, level2Bytes);
+        byte[] level3Bytes = null;
+        if (level1 != null){
+            try {
+                level3Bytes = level3.getBytes();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        map.put(3L, level3Bytes);
+        mainBase.setLevel(0L);
+        mainBase.setImage(map);
+        return mainBaseRepository.save(mainBase);
+    }
 }

@@ -2,13 +2,16 @@ package org.game;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.game.auth.service.UserService;
 import org.game.utils.AccessDeniedHandler;
 import org.game.utils.AuthEntryPointJwt;
 import org.game.utils.AuthTokenFilter;
+import org.game.utils.PageSerialize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -73,12 +76,15 @@ public class SecurityConfig {
         return new Random();
     }
 
-   //@Bean
-   //public ObjectMapper objectMapper() {
-   //    ObjectMapper objectMapper = new ObjectMapper();
-   //    objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-   //    return objectMapper;
-   //}
+   @Bean
+   public ObjectMapper objectMapper() {
+       ObjectMapper objectMapper = new ObjectMapper();
+       SimpleModule simpleModule = new SimpleModule();
+       simpleModule.addSerializer(Page.class, new PageSerialize());
+       objectMapper.registerModule(simpleModule);
+       objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+       return objectMapper;
+   }
 
     @Bean
     public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {
