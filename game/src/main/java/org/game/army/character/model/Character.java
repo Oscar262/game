@@ -100,6 +100,8 @@ public class Character {
     @Column(columnDefinition = "boolean default false")
     private boolean favorite;
 
+    @Column(length = 600)
+    private String description;
 
     public enum Qualification {
         F,

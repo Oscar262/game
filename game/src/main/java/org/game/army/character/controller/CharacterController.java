@@ -36,6 +36,11 @@ public class CharacterController {
         return characterService.newCharacter();
     }
 
+    @PostMapping("/character_epic")
+    public Character characterEpic(@RequestBody Character character, @RequestPart("file") MultipartFile file){
+        return characterService.epicCharacter(character, file);
+    }
+
     @PutMapping(path = "/character/{character_id}/image", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public Character updateImage(@PathVariable("character_id") Long characterId, @RequestPart("file") MultipartFile file) {
         return characterService.saveImage(characterId, file);

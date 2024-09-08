@@ -110,4 +110,18 @@ public class CharacterService {
         character.setImage(fileBytes);
         return characterRepository.save(character);
     }
+
+    public Character epicCharacter(Character character, MultipartFile image){
+        User user = userService.getUser();
+        character.setUser(user);
+
+        byte[] fileBytes = null;
+        try {
+            fileBytes = image.getBytes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        character.setImage(fileBytes);
+        return characterRepository.save(character);
+    }
 }
