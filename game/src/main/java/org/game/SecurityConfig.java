@@ -3,6 +3,7 @@ package org.game;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.game.auth.service.UserService;
 import org.game.utils.AccessDeniedHandler;
 import org.game.utils.AuthEntryPointJwt;
@@ -83,6 +84,7 @@ public class SecurityConfig {
        simpleModule.addSerializer(Page.class, new PageSerialize());
        objectMapper.registerModule(simpleModule);
        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+       objectMapper.registerModule(new JavaTimeModule());
        return objectMapper;
    }
 

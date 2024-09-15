@@ -1,6 +1,9 @@
 package org.game.auth.output;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.time.LocalDateTime;
 
 public class JwtOutput {
 
@@ -14,6 +17,11 @@ public class JwtOutput {
     private String name;
 
     private String lastname;
+
+    @JsonProperty("expired_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime expiredDate;
+
 
     public JwtOutput(String accessToke, String email, String name, String lastname) {
         this.accessToke = accessToke;
@@ -60,5 +68,13 @@ public class JwtOutput {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public LocalDateTime getExpiredDate() {
+        return expiredDate;
+    }
+
+    public void setExpiredDate(LocalDateTime expiredDate) {
+        this.expiredDate = expiredDate;
     }
 }

@@ -3,6 +3,7 @@ package org.game.auth.service;
 import org.game.auth.input.UserPagination;
 import org.game.auth.input.UserSearch;
 import org.game.auth.model.User;
+import org.game.auth.output.JwtOutput;
 import org.game.auth.repository.UserRepository;
 import org.game.auth.model.UserDetailsImpl;
 import org.game.utils.AuthenticationFacadeImpl;
@@ -95,11 +96,12 @@ public class UserService  implements UserDetailsService {
         return null;
     }
 
-    private Optional<User> finById(Long userId) {
+    public Optional<User> finById(Long userId) {
         return userRepository.findById(userId);
     }
 
     public User save(User user) {
         return userRepository.save(user);
     }
+
 }
