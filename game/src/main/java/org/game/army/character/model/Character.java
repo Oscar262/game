@@ -137,7 +137,8 @@ public class Character {
         DRUID(List.of(SubType.DARK_DRUID, SubType.LIGHT_DRUID)),
         STEALER(List.of(SubType.KILLER)),
         HALF_BEAST(List.of(SubType.BEAST_TAMER, SubType.TURNED)),
-        SUMMONED(List.of(SubType.ALIVE_SUMMONED));
+        SUMMONED(List.of(SubType.ALIVE_SUMMONED)),
+        SAILOR(List,of());
 
 
         private List<Character.SubType> subTypes;
@@ -158,9 +159,7 @@ public class Character {
     public enum Profession {
         CHEF,
         BLACKSMITH,
-        BARD,
         HUNTER,
-        EXPLORER,
         ENCHANTER,
         ALCHEMIST,
         BUILDER,
