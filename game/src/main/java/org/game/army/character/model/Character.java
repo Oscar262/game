@@ -160,7 +160,6 @@ public class Character {
         CHEF,
         BLACKSMITH,
         HUNTER,
-        ENCHANTER,
         ALCHEMIST,
         BUILDER,
         INSTRUCTOR
