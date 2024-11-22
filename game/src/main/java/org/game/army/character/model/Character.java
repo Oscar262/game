@@ -33,6 +33,7 @@ public class Character {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = User.class)
+    @JsonIgnoreProperties("mainBase")
     private User user;
 
     private Gender gender;
