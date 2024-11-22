@@ -48,8 +48,8 @@ public class Card {
         BRONZE(5L),
         SILVER(20L),
         GOLD(50L),
-        DIAMOND(75L),
-        EPIC(100L),
+        EPIC(75L),
+        LEGENDARY(100L),
         DARK(100L);
 
         private Long minLevel;

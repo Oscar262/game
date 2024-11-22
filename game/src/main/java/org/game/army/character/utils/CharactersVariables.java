@@ -50,9 +50,9 @@ public class CharactersVariables {
     public Card.Type getCharacterCard(Long userLevel) {
         double percentage = random.nextDouble() * 100;
         if (percentage == 100)
-            return Card.Type.EPIC;
+            return Card.Type.LEGENDARY;
         if (percentage == 0)
-            return Card.Type.EPIC;
+            return Card.Type.LEGENDARY;
 
         if (userLevel <= 5) {
             if (percentage > 5)
