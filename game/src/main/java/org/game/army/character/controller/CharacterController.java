@@ -3,6 +3,7 @@ package org.game.army.character.controller;
 import org.game.army.character.input.CharacterSearch;
 import org.game.army.character.model.Character;
 import org.game.army.character.service.CharacterService;
+import org.game.utils.AiService;
 import org.game.utils.OffsetPagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.io.IOException;
+
 @Validated
 @EnableWebMvc
 @RestController
@@ -20,6 +23,30 @@ public class CharacterController {
     @Autowired
     private CharacterService characterService;
 
+    @Autowired
+    private AiService aiService;
+
+    @GetMapping(path = "/generate")
+    public String generate(@RequestParam String description) {
+        try {
+            return aiService.generateImage(description);
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+    @GetMapping(path = "/get")
+    public String get(@RequestParam String id) {
+        try {
+            return aiService.get(id);
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    @GetMapping("/description")
+    public String getDescription() throws IOException, InterruptedException {
+        return aiService.generateDescription();
+    }
 
     @GetMapping("/character/{character_id}")
     public Character getCharacter(@PathVariable("character_id") Long characterId){
