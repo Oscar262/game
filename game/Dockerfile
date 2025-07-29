@@ -8,7 +8,7 @@ COPY . .
 RUN ls -la /game/game
 
 # Compila el proyecto y genera el JAR
-RUN /game mvn clean package -DskipTests
+RUN /game sudo mvn clean package -DskipTests
 
 # Etapa 2: Imagen final con solo el JAR
 FROM eclipse-temurin:11-jdk-jammy
