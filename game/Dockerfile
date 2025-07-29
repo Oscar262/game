@@ -5,14 +5,14 @@ WORKDIR /game/game
 # Copia todo el código fuente
 COPY . .
 
-RUN ls -la /game
+RUN ls -la
 
 # Compila el proyecto y genera el JAR
 RUN mvn clean package -DskipTests
 
 # Etapa 2: Imagen final con solo el JAR
 FROM eclipse-temurin:11-jdk-jammy
-WORKDIR /game
+WORKDIR /game/game
 
 # Copia el JAR desde la etapa de construcción
 COPY --from=build /game/target/*.jar game.jar
