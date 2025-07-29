@@ -1,6 +1,6 @@
 FROM eclipse-temurin:17-jdk
 
-WORKDIR /app
+WORKDIR /game
 
 COPY game/pom.xml .
 COPY game/src ./src
