@@ -139,6 +139,7 @@
     </dependencies>
 
     <build>
+        <finalName>game</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
