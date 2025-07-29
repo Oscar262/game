@@ -13,7 +13,7 @@ FROM eclipse-temurin:11-jdk-jammy
 WORKDIR /game/game
 
 # Copia el JAR desde la etapa de construcción
-COPY --from=build /game/game/target/game.jar game.jar
+COPY --from=build /game/game/target/*.jar game.jar
 
 # Expone el puerto estándar para Spring Boot
 EXPOSE 8080
