@@ -1,15 +1,22 @@
-FROM eclipse-temurin:17-jdk
+# Etapa 1: Compila el proyecto con Maven
+FROM maven:3.8.5-eclipse-temurin-11 AS build
+WORKDIR /game/game
 
-WORKDIR /game
+# Copia todo el código fuente
+COPY . .
 
-COPY game/pom.xml .
-COPY game/mvnw .
-COPY game/.mvn .mvn
-COPY game/src ./src
+# Compila el proyecto y genera el JAR
+RUN mvn clean package -DskipTests
 
-RUN chmod +x ./mvnw
+# Etapa 2: Imagen final con solo el JAR
+FROM eclipse-temurin:11-jdk-jammy
+WORKDIR /game/game
 
-RUN ./mvnw dependency:go-offline -B
-RUN ./mvnw clean package -DskipTests
+# Copia el JAR desde la etapa de construcción
+COPY --from=build /game/game/target/game.jar game.jar
 
-CMD ["sh", "-c", "java -jar target/*.jar"]
+# Expone el puerto estándar para Spring Boot
+EXPOSE 8080
+
+# Comando para ejecutar la aplicación
+ENTRYPOINT ["java", "-jar", "app.jar"]
