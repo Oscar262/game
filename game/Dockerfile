@@ -3,7 +3,9 @@ FROM maven:3.8.5-eclipse-temurin-11 AS build
 WORKDIR /game
 
 # Copia todo el código fuente
-COPY ./
+COPY . .
+
+RUN ls -la /game
 
 # Compila el proyecto y genera el JAR
 RUN mvn clean package -DskipTests
