@@ -19,4 +19,4 @@ COPY --from=build /game/game/target/game.jar game.jar
 EXPOSE 8080
 
 # Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "game.jar"]
