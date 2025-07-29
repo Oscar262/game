@@ -3,9 +3,13 @@ FROM eclipse-temurin:17-jdk
 WORKDIR /game
 
 COPY game/pom.xml .
+COPY game/mvnw .
+COPY game/.mvn .mvn
 COPY game/src ./src
 
-RUN ./mvnw dependency:go-offline -B
+RUN chmod +x ./mvnw
 
-# Comando para ejecutar el JAR de la app
-CMD ["java", "-jar", "target/game-0.0.1.jar"]
+RUN ./mvnw dependency:go-offline -B
+RUN ./mvnw clean package -DskipTests
+
+CMD ["sh", "-c", "java -jar target/*.jar"]
