@@ -1,25 +1,28 @@
 package org.game.army.character.service;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.game.army.character.input.CharacterSearch;
 import org.game.army.character.model.Card;
+import org.game.army.character.model.Character;
 import org.game.army.character.model.InventoryCharacter;
 import org.game.army.character.model.Skill;
 import org.game.army.character.repository.CharacterRepository;
-import org.game.army.character.model.Character;
 import org.game.army.character.utils.CharactersVariables;
 import org.game.auth.model.User;
 import org.game.auth.service.UserService;
+import org.game.ia.IaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -42,6 +45,9 @@ public class CharacterService {
 
     @Autowired
     private InventoryCharacterService inventoryCharacterService;
+
+    @Autowired
+    private IaService iaService;
 
 
     public Optional<Character> getCharacter(Long characterId) {
@@ -69,13 +75,13 @@ public class CharacterService {
 
 
         //TODO: hacer con llamadas a ia
-        character.setImage(null);
+        //character.setImage(null);
 
         //TODO: hacer con llamadas a ia
-        character.setGender(charactersVariables.getGender());
-        if (character.getGender() == Character.Gender.MALE) character.setName(charactersVariables.getMaleName());
-        else character.setName(charactersVariables.getFemaleName());
-        character.setLastName(charactersVariables.getLastName());
+        //character.setGender(charactersVariables.getGender());
+        //if (character.getGender() == Character.Gender.MALE) character.setName(charactersVariables.getMaleName());
+        //else character.setName(charactersVariables.getFemaleName());
+        //character.setLastName(charactersVariables.getLastName());
 
         character.setExperience(0L);
         Card card = cardService.findByType(charactersVariables.getCharacterCard(user.getLevel()));
@@ -93,7 +99,44 @@ public class CharacterService {
         InventoryCharacter inventoryCharacter = new InventoryCharacter();
         inventoryCharacter = inventoryCharacterService.save(inventoryCharacter);
         character.setInventoryCharacter(inventoryCharacter);
-        return characterRepository.save(character);
+
+        try {
+            String jsonDescirption = iaService.generateCharacter(character);
+
+            Gson gson = new Gson();
+
+            // Parseamos el JSON como un objeto genérico
+            JsonObject jsonObject = gson.fromJson(jsonDescirption, JsonObject.class);
+
+            // Creamos un nuevo Character y asignamos los campos
+            if (jsonObject.has("name")) {
+                character.setName(jsonObject.get("name").getAsString());
+            }
+            if (jsonObject.has("surname")) {
+                character.setLastName(jsonObject.get("surname").getAsString());
+            }
+            if (jsonObject.has("gender")) {
+                Map<String, String> genderMap = Map.of(
+                        "masculino", "MALE",
+                        "femenino", "FEMALE",
+                        "other", "OTHER"
+                );
+                String gender = jsonObject.get("gender").getAsString().toLowerCase();
+                character.setGender(Character.Gender.valueOf(genderMap.getOrDefault(gender, "other")));
+            }
+            if (jsonObject.has("description")) {
+                character.setDescription(jsonObject.get("description").getAsString());
+            }
+            byte[] characterImage = iaService.generateCharacterImage(character.getDescription());
+            character.setImage(characterImage);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return character;
+        //return characterRepository.save(character);
     }
 
     public Character saveImage(Long characterId, MultipartFile multipart) {
@@ -111,7 +154,7 @@ public class CharacterService {
         return characterRepository.save(character);
     }
 
-    public Character epicCharacter(Character character, MultipartFile image){
+    public Character epicCharacter(Character character, MultipartFile image) {
         User user = userService.getUser();
         character.setUser(user);
 

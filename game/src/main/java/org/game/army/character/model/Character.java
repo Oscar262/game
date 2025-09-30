@@ -189,6 +189,7 @@ public class Character {
 
     public enum Gender {
         MALE,
-        FEMALE
+        FEMALE,
+        OTHER
     }
 }
