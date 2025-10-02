@@ -21,9 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class CharacterService {
@@ -49,6 +48,8 @@ public class CharacterService {
     @Autowired
     private IaService iaService;
 
+    @Autowired
+    private Random random;
 
     public Optional<Character> getCharacter(Long characterId) {
         User user = userService.getUser();
@@ -73,16 +74,6 @@ public class CharacterService {
         Character character = new Character();
         character.setUser(user);
 
-
-        //TODO: hacer con llamadas a ia
-        //character.setImage(null);
-
-        //TODO: hacer con llamadas a ia
-        //character.setGender(charactersVariables.getGender());
-        //if (character.getGender() == Character.Gender.MALE) character.setName(charactersVariables.getMaleName());
-        //else character.setName(charactersVariables.getFemaleName());
-        //character.setLastName(charactersVariables.getLastName());
-
         character.setExperience(0L);
         Card card = cardService.findByType(charactersVariables.getCharacterCard(user.getLevel()));
         character.setCard(card);
@@ -100,40 +91,102 @@ public class CharacterService {
         inventoryCharacter = inventoryCharacterService.save(inventoryCharacter);
         character.setInventoryCharacter(inventoryCharacter);
 
+        String jsonDescirption = null;
         try {
-            String jsonDescirption = iaService.generateCharacter(character);
+            jsonDescirption = iaService.generateCharacter(character, random.nextInt());
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
-            Gson gson = new Gson();
+        Gson gson = new Gson();
 
-            // Parseamos el JSON como un objeto genérico
-            JsonObject jsonObject = gson.fromJson(jsonDescirption, JsonObject.class);
+        // Parseamos el JSON como un objeto genérico
+        JsonObject jsonObject = gson.fromJson(jsonDescirption, JsonObject.class);
 
-            // Creamos un nuevo Character y asignamos los campos
-            if (jsonObject.has("name")) {
-                character.setName(jsonObject.get("name").getAsString());
-            }
-            if (jsonObject.has("surname")) {
-                character.setLastName(jsonObject.get("surname").getAsString());
-            }
-            if (jsonObject.has("gender")) {
-                Map<String, String> genderMap = Map.of(
-                        "masculino", "MALE",
-                        "femenino", "FEMALE",
-                        "other", "OTHER"
-                );
+        // Creamos un nuevo Character y asignamos los campos
+        if (jsonObject.has("name")) {
+            character.setName(jsonObject.get("name").getAsString());
+        }
+        if (jsonObject.has("surname")) {
+            character.setLastName(jsonObject.get("surname").getAsString());
+        }
+        if (jsonObject.has("gender")) {
+            Map<String, String> genderMap = Map.of(
+                    "masculino", "MALE",
+                    "femenino", "FEMALE",
+                    "other", "OTHER"
+            );
+            try {
                 String gender = jsonObject.get("gender").getAsString().toLowerCase();
-                character.setGender(Character.Gender.valueOf(genderMap.getOrDefault(gender, "other")));
+                character.setGender(Character.Gender.valueOf(genderMap.get(gender)));
+            } catch (Exception e) {
+                character.setGender(Character.Gender.OTHER);
             }
-            if (jsonObject.has("description")) {
-                character.setDescription(jsonObject.get("description").getAsString());
-            }
-            byte[] characterImage = iaService.generateCharacterImage(character.getDescription());
-            character.setImage(characterImage);
+        }
+        if (jsonObject.has("description")) {
+            JsonObject descObj = jsonObject.getAsJsonObject("description");
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            // Guardamos la descripción actual
+            if (descObj.has("current")) character.setDescription(descObj.get("current").getAsString());
+
+            Map<Long, byte[]> imagesByLevel = new HashMap<>();
+
+            // Lista de niveles
+            Map<Long, String> levels = new HashMap<>();
+            if (descObj.has("level1")) levels.put(1L, descObj.get("level1").getAsString());
+            if (descObj.has("level2")) levels.put(2L, descObj.get("level2").getAsString());
+            if (descObj.has("level3")) levels.put(3L, descObj.get("level3").getAsString());
+            if (descObj.has("level4")) levels.put(4L, descObj.get("level4").getAsString());
+            if (descObj.has("level5")) levels.put(5L, descObj.get("level5").getAsString());
+            if (descObj.has("level6")) levels.put(6L, descObj.get("level6").getAsString());
+
+            // Generamos las imágenes de forma paralela
+
+            // Esperamos a que todas terminen
+            //int seed = random.nextInt();
+            //CompletableFuture.allOf(levels.entrySet().stream()
+            //        .map(entry -> CompletableFuture.runAsync(() -> {
+            //            byte[] image = null;
+            //            try {
+            //                image = iaService.generateCharacterImage(entry.getValue(), seed);
+            //            } catch (IOException | InterruptedException e) {
+            //                throw new RuntimeException(e);
+            //            }
+            //            synchronized (imagesByLevel) {
+            //                imagesByLevel.put(entry.getKey(), image);
+            //            }
+            //        })).toArray(CompletableFuture[]::new)).join();
+            CompletableFuture.allOf(levels.entrySet().stream()
+                    .map(entry -> CompletableFuture.runAsync(() -> {
+                        long levelToGenerate = entry.getKey();
+                        String levelDescription = entry.getValue();
+
+                        // Construimos prompt solo para el nivel que se va a generar
+                        StringBuilder promptBuilder = new StringBuilder();
+                        promptBuilder.append("Genera una imagen de un personaje de fantasía.\n");
+                        promptBuilder.append("Nombre: ").append(character.getName())
+                                .append(" ").append(character.getLastName()).append("\n\n");
+                        promptBuilder.append("Descripción y apariencia del personaje:\n");
+                        promptBuilder.append(levelDescription).append("\n");
+
+                        String fullPrompt = promptBuilder.toString();
+                        byte[] image = null;
+                        try {
+                            image = iaService.generateCharacterImage(fullPrompt);
+                        } catch (IOException | InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        synchronized (imagesByLevel) {
+                            imagesByLevel.put(levelToGenerate, image);
+                        }
+
+                        System.out.println("Prompt usado para nivel " + levelToGenerate + ":\n" + fullPrompt);
+
+                    })).toArray(CompletableFuture[]::new)).join();
+
+            character.setImage(imagesByLevel);
+
         }
         return character;
         //return characterRepository.save(character);
@@ -150,7 +203,7 @@ public class CharacterService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        character.setImage(fileBytes);
+        //character.setImage(fileBytes);
         return characterRepository.save(character);
     }
 
@@ -164,7 +217,7 @@ public class CharacterService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        character.setImage(fileBytes);
+        //character.setImage(fileBytes);
         return characterRepository.save(character);
     }
 }

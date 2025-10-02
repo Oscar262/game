@@ -1,4 +1,8 @@
 package org.game.ia;
+
+import org.game.army.character.model.Character;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -7,9 +11,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
-
-import org.game.army.character.model.Character;
-import org.springframework.stereotype.Service;
 
 @Service
 public class IaService {
@@ -49,37 +50,71 @@ public class IaService {
             }
         }
         StringBuilder prompt = new StringBuilder();
+        //prompt.append(
+        //                "Genera una pequeña descripción creativa de un personaje de fantasía basada en la información provista.\n" +
+        //                        "- La descripción debe reflejar las habilidades, fuerza y capacidades del personaje según **sus atributos actuales**, **sin mencionar números ni valores concretos**.\n" +
+        //                        "- Cada atributo tiene un valor máximo potencial (1-100) solo como referencia de su desarrollo futuro; **no debe usarse para determinar la descripción actual**.\n" +
+        //                        "- Clasifica los atributos actuales de la siguiente manera:\n" +
+        //                        "    * Valores bajos (aprox. 1-33): reflejan inexperiencia, debilidad o falta de dominio.\n" +
+        //                        "    * Valores medios (aprox. 34-66): reflejan habilidad equilibrada y competencia razonable.\n" +
+        //                        "    * Valores altos (aprox. 67-100): reflejan excelencia y dominio destacado.\n" +
+        //                        "- Usa las profesiones y habilidades según su calificación interna (F a X) para reflejar talento, destreza y maestría de manera implícita:\n" +
+        //                        "    * F: principiante, poco dominio.\n" +
+        //                        "    * D-C: competente, habilidad media.\n" +
+        //                        "    * B-A: avanzado, gran destreza.\n" +
+        //                        "    * S: experto, prácticamente inigualable.\n" +
+        //                        "    * X: EL MEJOR, sin comparación.\n" +
+        //                        "- Describe atributos y habilidades **solo en función de su valor actual y su experiencia**, sin usar el máximo potencial ni revelar números exactos.\n" +
+        //                        "- Haz que la descripción sea coherente con el tipo, subtipo, talentos y personalidad implícita del personaje.\n" +
+        //                        "Devuelve únicamente un JSON con los campos: {\"name\":\"\",\"surname\":\"\",\"gender\":\"\",\"description\":\"\"}.\n\n" +
+        //                        "Información del personaje:\n"
+        //        )
         prompt.append(
-                        "Genera una pequeña descripción creativa de un personaje de fantasía basada en la información provista.\n" +
-                                "- La descripción debe reflejar las habilidades, fuerza y capacidades del personaje según **sus atributos actuales**, **sin mencionar números ni valores concretos**.\n" +
-                                "- Cada atributo tiene un valor máximo potencial (1-100) solo como referencia de su desarrollo futuro; **no debe usarse para determinar la descripción actual**.\n" +
-                                "- Clasifica los atributos actuales de la siguiente manera:\n" +
-                                "    * Valores bajos (aprox. 1-33): reflejan inexperiencia, debilidad o falta de dominio.\n" +
-                                "    * Valores medios (aprox. 34-66): reflejan habilidad equilibrada y competencia razonable.\n" +
-                                "    * Valores altos (aprox. 67-100): reflejan excelencia y dominio destacado.\n" +
-                                "- Usa las profesiones y habilidades según su calificación interna (F a X) para reflejar talento, destreza y maestría de manera implícita:\n" +
-                                "    * F: principiante, poco dominio.\n" +
-                                "    * D-C: competente, habilidad media.\n" +
-                                "    * B-A: avanzado, gran destreza.\n" +
-                                "    * S: experto, prácticamente inigualable.\n" +
-                                "    * X: EL MEJOR, sin comparación.\n" +
-                                "- Describe atributos y habilidades **solo en función de su valor actual y su experiencia**, sin usar el máximo potencial ni revelar números exactos.\n" +
-                                "- Haz que la descripción sea coherente con el tipo, subtipo, talentos y personalidad implícita del personaje.\n" +
-                                "Devuelve únicamente un JSON con los campos: {\"name\":\"\",\"surname\":\"\",\"gender\":\"\",\"description\":\"\"}.\n\n" +
+                        "Genera descripciones creativas de un personaje de fantasía basado en la información provista.\n" +
+                                "- Debes generar la descripción general del personaje (current) y además seis niveles de desarrollo de experiencia:\n" +
+                                "    * Nivel 1: completamente inexperto, apariencia joven, vestimenta sencilla, postura insegura\n" +
+                                "    * Nivel 2: un poco de experiencia, ligera madurez, más seguro, armas básicas o accesorio característico\n" +
+                                "    * Nivel 3: aprendiz competente, apariencia más formada, vestimenta adaptada a su rol, postura confiada\n" +
+                                "    * Nivel 4: nivel avanzado, madurez física y emocional, apariencia profesional, equipo más elaborado\n" +
+                                "    * Nivel 5: casi experto, físico fuerte o ágil según tipo, expresión determinada, armas/armadura avanzada\n" +
+                                "    * Nivel 6: experto, maestría total, apariencia madura y experta, porte imponente, vestimenta y armas distintivas\n" +
+                                "- La descripción 'current' debe centrarse únicamente en quién es el personaje: su historia, personalidad, motivaciones y valores. No incluir apariencia, edad, vestimenta, armas o postura.\n" +
+                                "- Cada nivel debe incluir personalidad, habilidades, experiencia, edad aproximada, apariencia, vestimenta, armas, postura, expresión y accesorios característicos de ese nivel.\n" +
+                                "- Clasifica los atributos según su nivel:\n" +
+                                "    * Valores bajos (1-33 aprox.): inexperiencia, debilidad o falta de dominio\n" +
+                                "    * Valores medios (34-66 aprox.): habilidad equilibrada y competencia razonable\n" +
+                                "    * Valores altos (67-100 aprox.): excelencia y dominio destacado\n" +
+                                "- Usa las profesiones y habilidades según su calificación interna (F a X) para reflejar talento y maestría implícitamente.\n" +
+                                "- Haz que todas las descripciones sean coherentes con el mismo personaje, tipo, subtipo, talentos y personalidad implícita.\n" +
+                                "- Cada descripción debe tener como máximo 100 palabras.\n" +
+                                "- Devuelve únicamente un JSON con los siguientes campos:\n" +
+                                "{\n" +
+                                "  \"name\":\"\",\n" +
+                                "  \"surname\":\"\",\n" +
+                                "  \"gender\":\"\",\n" +
+                                "  \"description\":{\n" +
+                                "      \"current\":\"\",  // Quién es el personaje, su historia y motivación\n" +
+                                "      \"level1\":\"\",\n" +
+                                "      \"level2\":\"\",\n" +
+                                "      \"level3\":\"\",\n" +
+                                "      \"level4\":\"\",\n" +
+                                "      \"level5\":\"\",\n" +
+                                "      \"level6\":\"\"\n" +
+                                "  }\n" +
+                                "}\n\n" +
                                 "Información del personaje:\n"
-                )
+                ).append("\n")
                 .append(sb)
-                .append("\n")
-                .append("Haz que la descripción tenga como máximo 100 palabras.\n");
+                .append("Haz que la descripción 'current' se centre solo en quién es el personaje. Los niveles 1-6 deben incluir edad, apariencia, vestimenta, armas, postura, expresión y accesorios, manteniendo coherencia con su desarrollo y experiencia.\n");
 
         return prompt.toString();
     }
 
-    public String generateCharacter(Character character) throws IOException, InterruptedException {
+    public String generateCharacter(Character character, int seed) throws IOException, InterruptedException {
         String prompt = generateDescription(character);
         try {
             String encodedPrompt = URLEncoder.encode(prompt, "UTF-8");
-            String url = "https://text.pollinations.ai/" + encodedPrompt + "?lang=es&format=json";
+            String url = "https://text.pollinations.ai/" + encodedPrompt + "?lang=es&format=json&seed" + seed;
 
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
@@ -112,5 +147,6 @@ public class IaService {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;
-        }    }
+        }
+    }
 }

@@ -43,7 +43,12 @@ public class Character {
     @JsonProperty("last_name")
     private String lastName;
 
-    private byte[] image;
+    @Type(type = "json")
+    @Column(
+            name = "images",
+            columnDefinition = "jsonb"
+    )
+    private Map<Long, byte[]> image;
 
     private Long level;
 

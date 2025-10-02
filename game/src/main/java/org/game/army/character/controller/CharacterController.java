@@ -3,6 +3,7 @@ package org.game.army.character.controller;
 import org.game.army.character.input.CharacterSearch;
 import org.game.army.character.model.Character;
 import org.game.army.character.service.CharacterService;
+import org.game.ia.IaService;
 import org.game.utils.AiService;
 import org.game.utils.OffsetPagination;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class CharacterController {
     }
 
     @PostMapping("/character")
-    public Character character(){
+    public Character character() throws IOException, InterruptedException {
         return characterService.newCharacter();
     }
 
