@@ -5,11 +5,10 @@ import org.game.army.character.model.Character;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface CharacterRepository extends JpaRepository<Character, Long>, CharacterRepositoryCustom {
+import java.util.List;
+
+public interface CharacterRepositoryCustom {
 
     Page<Character> findAll(CharacterSearch search, Pageable pageable);
 

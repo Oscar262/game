@@ -1,21 +1,26 @@
 package org.game.army.character.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.game.army.character.view.CharacterView;
 import org.game.auth.model.User;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.springframework.data.util.Pair;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -25,6 +30,7 @@ import java.util.Map;
 @TypeDefs({
         @TypeDef(name = "json", typeClass = JsonType.class)
 })
+@JsonView({CharacterView.Basic.class, CharacterView.ImagesTrue.class})
 public class Character {
 
 
@@ -43,7 +49,13 @@ public class Character {
     @JsonProperty("last_name")
     private String lastName;
 
-    private byte[] image;
+    @Type(type = "json")
+    @Column(
+            name = "images",
+            columnDefinition = "jsonb"
+    )
+    @JsonIgnore
+    private Map<Long, Pair<Boolean, byte[]>> image;
 
     private Long level;
 
@@ -189,6 +201,17 @@ public class Character {
 
     public enum Gender {
         MALE,
-        FEMALE
+        FEMALE,
+        OTHER
+    }
+
+    @JsonView(CharacterView.ImagesTrue.class)
+    public Map<Long, byte[]> getImageActive() {
+        return image.entrySet().stream()
+                .filter(e -> e.getValue().getFirst())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue().getSecond()
+                ));
     }
 }

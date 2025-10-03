@@ -1,8 +1,10 @@
 package org.game.army.character.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.game.army.character.input.CharacterSearch;
 import org.game.army.character.model.Character;
 import org.game.army.character.service.CharacterService;
+import org.game.army.character.view.CharacterView;
 import org.game.utils.AiService;
 import org.game.utils.OffsetPagination;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,27 +28,27 @@ public class CharacterController {
     @Autowired
     private AiService aiService;
 
-    @GetMapping(path = "/generate")
-    public String generate(@RequestParam String description) {
-        try {
-            return aiService.generateImage(description);
-        } catch (Exception e) {
-            return "Error: " + e.getMessage();
-        }
-    }
-    @GetMapping(path = "/get")
-    public String get(@RequestParam String id) {
-        try {
-            return aiService.get(id);
-        } catch (Exception e) {
-            return "Error: " + e.getMessage();
-        }
-    }
-
-    @GetMapping("/description")
-    public String getDescription() throws IOException, InterruptedException {
-        return aiService.generateDescription();
-    }
+    //@GetMapping(path = "/generate")
+    //public String generate(@RequestParam String description) {
+    //    try {
+    //        return aiService.generateImage(description);
+    //    } catch (Exception e) {
+    //        return "Error: " + e.getMessage();
+    //    }
+    //}
+    //@GetMapping(path = "/get")
+    //public String get(@RequestParam String id) {
+    //    try {
+    //        return aiService.get(id);
+    //    } catch (Exception e) {
+    //        return "Error: " + e.getMessage();
+    //    }
+    //}
+//
+    //@GetMapping("/description")
+    //public String getDescription() throws IOException, InterruptedException {
+    //    return aiService.generateDescription();
+    //}
 
     @GetMapping("/character/{character_id}")
     public Character getCharacter(@PathVariable("character_id") Long characterId){
@@ -54,6 +56,7 @@ public class CharacterController {
     }
 
     @GetMapping("/character")
+    @JsonView(CharacterView.ImagesTrue.class)
     public Page<Character> getAll(OffsetPagination offsetPagination, CharacterSearch characterSearch){
         return characterService.getAll(offsetPagination, characterSearch);
     }
