@@ -89,7 +89,13 @@ public class CharactersVariables {
 
 
     public Character.BasicType getType(MainBaseType mainBaseType) {
-        return Character.BasicType.values()[random.nextInt(getRandomNum(mainBaseType.getAvailableCharacter().size()))];
+        try {
+            int num = random.nextInt(getRandomNum(mainBaseType.getAvailableCharacter().size()));
+            return Character.BasicType.values()[num];
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.fillInStackTrace());
+            return null;
+        }
     }
 
     public Map<Long, Character.Qualification> getSkills(Long level, List<Skill> skills) {

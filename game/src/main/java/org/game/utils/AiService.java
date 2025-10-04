@@ -123,7 +123,10 @@ public class AiService {
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
+            while (response.statusCode() != 200) {
+                System.err.println(response.body());
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            }
             return response.body();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -142,6 +145,9 @@ public class AiService {
                     .build();
 
             HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+            while (response.statusCode() != 200) {
+                response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+            }
             return response.body();
 
         } catch (UnsupportedEncodingException e) {

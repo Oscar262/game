@@ -72,6 +72,7 @@ public class CharacterService {
         User user = userService.getUser();
         if (user == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect user");
 
+        System.out.println("Creando nuevo personaje");
         Character character = new Character();
         character.setUser(user);
 
@@ -130,7 +131,7 @@ public class CharacterService {
             // Guardamos la descripción actual
             if (descObj.has("current")) character.setDescription(descObj.get("current").getAsString());
 
-            Map<Long, Pair<Boolean, byte[]>> imagesByLevel = new HashMap<>();
+            //Map<Long, Pair<Boolean, byte[]>> imagesByLevel = new HashMap<>();
 
             // Lista de niveles
             Map<Long, String> levels = new HashMap<>();
@@ -141,39 +142,80 @@ public class CharacterService {
             if (descObj.has("level5")) levels.put(5L, descObj.get("level5").getAsString());
             if (descObj.has("level6")) levels.put(6L, descObj.get("level6").getAsString());
 
-            CompletableFuture.allOf(levels.entrySet().stream()
-                    .map(entry -> CompletableFuture.runAsync(() -> {
-                        long levelToGenerate = entry.getKey();
-                        String levelDescription = entry.getValue();
+            for (Long key : levels.keySet()) {
+                String description = levels.get(key);
 
-                        // Construimos prompt solo para el nivel que se va a generar
-                        StringBuilder promptBuilder = new StringBuilder();
-                        promptBuilder.append("Genera una imagen de un personaje de fantasía.\n");
-                        promptBuilder.append("Nombre: ").append(character.getName())
-                                .append(" ").append(character.getLastName()).append("\n\n");
-                        promptBuilder.append("Descripción y apariencia del personaje:\n");
-                        promptBuilder.append(levelDescription).append("\n");
+                StringBuilder promptBuilder = new StringBuilder();
+                promptBuilder.append("Genera una imagen de un personaje de fantasía.\n");
+                promptBuilder.append("Nombre: ").append(character.getName())
+                        .append(" ").append(character.getLastName()).append("\n\n");
+                promptBuilder.append("Descripción y apariencia del personaje:\n");
+                promptBuilder.append(description).append("\n");
 
-                        String fullPrompt = promptBuilder.toString();
-                        byte[] image = null;
-                        try {
-                            image = iaService.generateCharacterImage(fullPrompt);
-                        } catch (IOException | InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+                String fullPrompt = promptBuilder.toString();
+                byte[] image = null;
+                try {
+                    image = iaService.generateCharacterImage(fullPrompt);
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
 
-                        synchronized (imagesByLevel) {
-                            if (levelToGenerate == 1)
-                                imagesByLevel.put(levelToGenerate, Pair.of(true, image));
-                            else
-                                imagesByLevel.put(levelToGenerate, Pair.of(false, image));
-                        }
+                switch (String.valueOf(key)) {
+                    case "1":
+                        character.setImage1(Pair.of(true, image));
+                        break;
+                    case "2":
+                        character.setImage2(Pair.of(false, image));
+                        break;
+                    case "3":
+                        character.setImage3(Pair.of(false, image));
+                        break;
+                    case "4":
+                        character.setImage4(Pair.of(false, image));
+                        break;
+                    case "5":
+                        character.setImage5(Pair.of(false, image));
+                        break;
+                    case "6":
+                        character.setImage6(Pair.of(false, image));
+                        break;
+                }
+                System.out.println("Prompt usado para nivel " + key + ":\n" + fullPrompt);
+            }
 
-                        System.out.println("Prompt usado para nivel " + levelToGenerate + ":\n" + fullPrompt);
+         //CompletableFuture.allOf(levels.entrySet().stream()
+         //        .map(entry -> CompletableFuture.runAsync(() -> {
+         //            long levelToGenerate = entry.getKey();
+         //            String levelDescription = entry.getValue();
 
-                    })).toArray(CompletableFuture[]::new)).join();
+         //            // Construimos prompt solo para el nivel que se va a generar
+         //            StringBuilder promptBuilder = new StringBuilder();
+         //            promptBuilder.append("Genera una imagen de un personaje de fantasía.\n");
+         //            promptBuilder.append("Nombre: ").append(character.getName())
+         //                    .append(" ").append(character.getLastName()).append("\n\n");
+         //            promptBuilder.append("Descripción y apariencia del personaje:\n");
+         //            promptBuilder.append(levelDescription).append("\n");
 
-            character.setImage(imagesByLevel);
+         //            String fullPrompt = promptBuilder.toString();
+         //            byte[] image = null;
+         //            try {
+         //                image = iaService.generateCharacterImage(fullPrompt);
+         //            } catch (IOException | InterruptedException e) {
+         //                throw new RuntimeException(e);
+         //            }
+
+         //            synchronized (imagesByLevel) {
+         //                if (levelToGenerate == 1)
+         //                    imagesByLevel.put(levelToGenerate, Pair.of(true, image));
+         //                else
+         //                    imagesByLevel.put(levelToGenerate, Pair.of(false, image));
+         //            }
+
+         //            System.out.println("Prompt usado para nivel " + levelToGenerate + ":\n" + fullPrompt);
+
+         //        })).toArray(CompletableFuture[]::new)).join();
+
+         //character.setImage(imagesByLevel);
 
         }
         return characterRepository.save(character);

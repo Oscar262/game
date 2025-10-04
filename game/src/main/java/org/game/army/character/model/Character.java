@@ -15,12 +15,12 @@ import org.game.auth.model.User;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.hibernate.exception.DataException;
 import org.springframework.data.util.Pair;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -33,6 +33,15 @@ import java.util.stream.Collectors;
 @JsonView({CharacterView.Basic.class, CharacterView.ImagesTrue.class})
 public class Character {
 
+
+    @PrePersist
+    @PreUpdate
+    private void validatedImages() throws Exception {
+        List<Pair<Boolean, byte[]>> images = getImages();
+        if (images.stream().filter(Pair::getFirst).count() != 1) {
+            throw new Exception("Have not any activated image");
+        }
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,11 +60,51 @@ public class Character {
 
     @Type(type = "json")
     @Column(
-            name = "images",
+            name = "image_1",
             columnDefinition = "jsonb"
     )
     @JsonIgnore
-    private Map<Long, Pair<Boolean, byte[]>> image;
+    private Pair<Boolean, byte[]> image1;
+
+    @Type(type = "json")
+    @Column(
+            name = "image_2",
+            columnDefinition = "jsonb"
+    )
+    @JsonIgnore
+    private Pair<Boolean, byte[]> image2;
+
+    @Type(type = "json")
+    @Column(
+            name = "image_3",
+            columnDefinition = "jsonb"
+    )
+    @JsonIgnore
+    private Pair<Boolean, byte[]> image3;
+
+    @Type(type = "json")
+    @Column(
+            name = "image_4",
+            columnDefinition = "jsonb"
+    )
+    @JsonIgnore
+    private Pair<Boolean, byte[]> image4;
+
+    @Type(type = "json")
+    @Column(
+            name = "image_5",
+            columnDefinition = "jsonb"
+    )
+    @JsonIgnore
+    private Pair<Boolean, byte[]> image5;
+
+    @Type(type = "json")
+    @Column(
+            name = "image_6",
+            columnDefinition = "jsonb"
+    )
+    @JsonIgnore
+    private Pair<Boolean, byte[]> image6;
 
     private Long level;
 
@@ -115,6 +164,9 @@ public class Character {
 
     @Column(length = 600)
     private String description;
+
+    @Transient
+    private List<Pair<Boolean, byte[]>> images;
 
     public enum Qualification {
         F,
@@ -205,13 +257,14 @@ public class Character {
         OTHER
     }
 
+    @JsonIgnore
+    public List<Pair<Boolean, byte[]>> getImages() {
+        return List.of(image1, image2, image3, image4, image5, image6);
+    }
+
     @JsonView(CharacterView.ImagesTrue.class)
-    public Map<Long, byte[]> getImageActive() {
-        return image.entrySet().stream()
-                .filter(e -> e.getValue().getFirst())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> e.getValue().getSecond()
-                ));
+    @JsonProperty("image_activated")
+    public Pair<Boolean, byte[]> getImageActived() {
+        return getImages().stream().filter(Pair::getFirst).findFirst().get();
     }
 }
